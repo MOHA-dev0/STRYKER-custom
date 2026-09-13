@@ -178,8 +178,8 @@ export const ENDORSEMENT = {
 export const SITE = {
   name: "STRYKER CUSTOM BIKE SHOW",
   short: "STRYKER",
-  email: "info@stryker-show.sa",
-  url: "https://stryker-show.sa",
+  email: "info@stryker-customs.com",
+  url: "https://stryker-customs.com",
   socials: [
     { label: "Instagram", handle: "@stryker.show", href: "https://instagram.com" },
     { label: "X", handle: "@stryker_show", href: "https://x.com" },

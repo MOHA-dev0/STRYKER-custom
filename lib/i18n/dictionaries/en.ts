@@ -617,7 +617,7 @@ export const en: Dictionary = {
       },
       {
         q: "How do I reach the support team?",
-        a: "Through the contact form on this page or at info@stryker-show.sa. We usually reply within one to three working days; during show season a reply can take a little longer.",
+        a: "Through the contact form on this page or at info@stryker-customs.com. We usually reply within one to three working days; during show season a reply can take a little longer.",
       },
       {
         q: "What is the partnership and sponsorship policy?",
