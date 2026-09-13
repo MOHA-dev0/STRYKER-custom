@@ -21,7 +21,7 @@ export const en: Dictionary = {
     about: {
       title: "About",
       description:
-        "The story, vision and mission behind STRYKER CUSTOM BIKE SHOW, the fourteen stages of a show build, the growth plan, and the business model.",
+        "The story, vision and mission behind STRYKER CUSTOM BIKE SHOW, the fourteen stages of a show build, and the growth plan.",
     },
     submissions: {
       title: "Entries & Highlights",
@@ -469,38 +469,6 @@ export const en: Dictionary = {
           body: "Representing the Kingdom at global custom bike shows with Saudi builds.",
         },
       ],
-    },
-    business: {
-      eyebrow: "BUSINESS MODEL & VALUE",
-      titleLead: "Business model and sponsorship — ",
-      titleAccent: "four revenue streams",
-      lead: "A simple, transparent model that lets the platform fund itself and keep going, and gives every partner tangible value in return.",
-      items: [
-        {
-          code: "ANNUAL MEMBERSHIPS",
-          title: "Annual memberships",
-          body: "An annual subscription for workshops and builders, granting a verified profile on the platform and priority at shows.",
-        },
-        {
-          code: "PROJECT LISTING",
-          title: "Project listing fees",
-          body: "A nominal fee to list a complete bike project with photos, build stages and specifications.",
-        },
-        {
-          code: "REFERRAL COMMISSION",
-          title: "Referral commission",
-          body: "Connecting bike owners to workshops and suppliers for a commission on referred work.",
-        },
-        {
-          code: "BRAND SPONSORSHIP",
-          title: "Brand sponsorship",
-          body: "Sponsorship packages for brands targeting the bike audience: presence at the shows, on the platform, and in the content.",
-        },
-      ],
-      deckEyebrow: "SPONSORSHIP DECK",
-      deckTitle:
-        "Request the full sponsorship deck with the numbers and placement opportunities for the 2026 season.",
-      deckCta: "Request the deck",
     },
   },
 
