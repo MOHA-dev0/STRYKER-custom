@@ -396,6 +396,62 @@
   }
 
   /*
+   * Below `md` the hero is static — nothing on it is scroll-driven any more.
+   * The layer promotion stays (a phone still composites the paper, the grain
+   * and the cut-out bike), but the standing `will-change` hint goes: a hint
+   * that never pays off is just texture memory a phone does not have, and it
+   * is the sort of thing that pushes a mid-range device into raster jank.
+   */
+  @media (max-width: 767px) {
+    .gpu {
+      will-change: auto;
+    }
+  }
+
+  /* --- Scroll reveal ----------------------------------------------------- */
+
+  /*
+   * The entrance animation every section shares. It used to be a Framer Motion
+   * `whileInView` variant, which meant a JS subscription per element and the
+   * whole animation runtime in the bundle for two properties that the
+   * compositor can interpolate on its own. Now it is one IntersectionObserver
+   * (in `components/site/reveal.tsx`) flipping a class, and the transition
+   * itself runs off the main thread — which is what keeps a phone at 60fps
+   * when a grid of eight cards crosses the fold at once.
+   *
+   * `will-change` is declared only while the element is still waiting, and
+   * dropped the moment it lands, so no layer outlives its animation.
+   */
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0s);
+    will-change: opacity, transform;
+  }
+
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  /*
+   * Reduced motion still needs the content to arrive — the base state is
+   * hidden, so it cannot simply drop the transition and stop there.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      will-change: auto;
+    }
+  }
+
+  /*
    * The floating navbar. It never moves, so it wants a layer without the
    * `will-change: transform` hint that would keep the compositor guessing —
    * a zero translate is enough to pin it, and killing backface rendering stops
@@ -428,71 +484,64 @@
   /*
    * Stage photography dissolves before it reaches the reading edge, so the
    * headline never sits on top of a photograph and the persistent watermark
-   * stays legible through the paper half of the frame. Mobile stacks the copy
-   * under the image, so there the fade runs bottom-up instead.
+   * stays legible through the paper half of the frame. There is no mobile
+   * variant: below `md` the hero is a plain column and the stage photos are
+   * not rendered at all, so the mask only ever has one job to do.
    */
   .stage-mask {
     -webkit-mask-image: linear-gradient(
-      to top,
-      transparent 6%,
-      rgba(0, 0, 0, 0.28) 34%,
-      #000 74%
+      to left,
+      #000 0%,
+      #000 28%,
+      rgba(0, 0, 0, 0.3) 62%,
+      transparent 90%
     );
     mask-image: linear-gradient(
-      to top,
-      transparent 6%,
-      rgba(0, 0, 0, 0.28) 34%,
-      #000 74%
+      to left,
+      #000 0%,
+      #000 28%,
+      rgba(0, 0, 0, 0.3) 62%,
+      transparent 90%
     );
   }
-  @media (min-width: 768px) {
-    .stage-mask {
-      -webkit-mask-image: linear-gradient(
-        to left,
-        #000 0%,
-        #000 28%,
-        rgba(0, 0, 0, 0.3) 62%,
-        transparent 90%
-      );
-      mask-image: linear-gradient(
-        to left,
-        #000 0%,
-        #000 28%,
-        rgba(0, 0, 0, 0.3) 62%,
-        transparent 90%
-      );
-    }
-    [dir="rtl"] .stage-mask {
-      -webkit-mask-image: linear-gradient(
-        to right,
-        #000 0%,
-        #000 28%,
-        rgba(0, 0, 0, 0.3) 62%,
-        transparent 90%
-      );
-      mask-image: linear-gradient(
-        to right,
-        #000 0%,
-        #000 28%,
-        rgba(0, 0, 0, 0.3) 62%,
-        transparent 90%
-      );
-    }
+  [dir="rtl"] .stage-mask {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 28%,
+      rgba(0, 0, 0, 0.3) 62%,
+      transparent 90%
+    );
+    mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 28%,
+      rgba(0, 0, 0, 0.3) 62%,
+      transparent 90%
+    );
   }
 
   /* --- Hero geometry ----------------------------------------------------- */
 
   /*
-   * The sticky hero is the one place on the site where a width breakpoint is
-   * not enough. A phone held sideways is 844px wide and 390px tall: it passes
-   * every `md:` test while having less than half the height the same phone has
-   * upright. So the frame's padding, the headline size, and which lines get
-   * dropped are settled here in plain CSS — where the short-viewport rule
-   * simply comes last and wins — rather than in Tailwind, where a `md:` class
-   * and a `max-height` class would race on variant ordering.
+   * The hero has two geometries, and only one of them is pinned.
    *
-   * Heights are `svh` throughout, never `dvh`: a mobile toolbar collapsing
-   * mid-scroll must not resize the scene that is being scrolled.
+   * Below `md` the frame is an ordinary `min-h-[100dvh]` column: headline,
+   * then the bike, then the buttons. Nothing is pinned, nothing is clipped,
+   * and the page simply scrolls, so height never has to be rationed — the
+   * short-viewport rules below are scoped to `md` and up for exactly that
+   * reason. `dvh` is the right unit here: it tracks the visible window, so the
+   * buttons sit above the browser chrome rather than under it.
+   *
+   * From `md` up the frame is pinned and the scene is scroll-driven, and a
+   * width breakpoint stops being enough: a phone held sideways is 844px wide
+   * and 390px tall, so it passes every `md:` test with less than half the
+   * height it has upright. Padding, headline size and which lines get dropped
+   * are settled here in plain CSS — where the short-viewport rule simply comes
+   * last and wins — rather than in Tailwind, where a `md:` class and a
+   * `max-height` class would race on variant ordering. Heights there are `svh`
+   * and never `dvh`: a toolbar collapsing mid-scroll must not resize the scene
+   * that is being scrolled, or the progress ratio jumps under the finger.
    */
 
   /*
@@ -503,7 +552,7 @@
    */
   .hero-frame {
     padding-top: 6rem;
-    padding-bottom: 3rem;
+    padding-bottom: 2rem;
   }
   @media (min-width: 768px) {
     .hero-frame {
@@ -511,35 +560,32 @@
       padding-bottom: 3.5rem;
     }
   }
-  @media (max-height: 560px) {
+  @media (min-width: 768px) and (max-height: 560px) {
     .hero-frame {
       padding-top: 5.5rem;
       padding-bottom: 1.5rem;
     }
   }
 
-  /*
-   * The headline tracks viewport width on a phone but is capped by viewport
-   * height, so a title that wraps to three lines still cannot push the buttons
-   * off the bottom of a short screen.
-   */
+  /* On a phone the headline answers to width alone — the column grows to fit
+     it, so there is no height budget left for it to blow. */
   .hero-title {
-    font-size: clamp(2.15rem, min(10.5vw, 8.5svh), 3.6rem);
+    font-size: clamp(2.1rem, 9.5vw, 3.25rem);
   }
   @media (min-width: 768px) {
     .hero-title {
       font-size: clamp(3rem, 8vw, 6.2rem);
     }
   }
-  @media (max-height: 560px) {
+  @media (min-width: 768px) and (max-height: 560px) {
     .hero-title {
       font-size: clamp(1.75rem, 6.5svh, 2.75rem);
     }
   }
 
-  /* Editorial lines that are first to go when the window is too short to hold
-     the headline, the standfirst and the buttons together. */
-  @media (max-height: 560px) {
+  /* Editorial lines that are first to go when a *pinned* frame is too short to
+     hold the headline, the standfirst and the buttons together. */
+  @media (min-width: 768px) and (max-height: 560px) {
     .hero-drop {
       display: none;
     }

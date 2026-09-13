@@ -78,6 +78,7 @@ export default async function RootLayout({
       lang={locale}
       dir={dirOf(locale)}
       className={`${plex.variable} ${barlow.variable}`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       {/*
@@ -87,7 +88,16 @@ export default async function RootLayout({
           z-50 — بوابات Radix، وهي أشقّاء للغلاف فتعلو عليه كله.
         `isolate` على body يضمن أن هذا الترتيب لا يتسرّب لسياق أعلى.
       */}
-      <body className="relative isolate min-h-dvh antialiased">
+      {/*
+        إضافات المتصفح (Grammarly وColorZilla وغيرها) تحقن سمات على <body>
+        قبل أن يرطّب React الشجرة، فتظهر كاختلاف ترطيب لا علاقة له بشيفرتنا.
+        `suppressHydrationWarning` يسري على مستوى واحد فقط، فلا يكفي وجوده
+        على <html>؛ لذا يلزم هنا أيضًا.
+      */}
+      <body
+        className="relative isolate min-h-dvh antialiased"
+        suppressHydrationWarning
+      >
         <I18nProvider locale={locale} dict={dict}>
           <BrandBackdrop />
           <div className="relative z-10 flex min-h-dvh flex-col">

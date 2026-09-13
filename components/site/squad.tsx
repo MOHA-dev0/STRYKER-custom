@@ -12,7 +12,7 @@ import { SectionHeading } from "@/components/site/section-heading"
 export function Squad() {
   const { dict } = useI18n()
   const copy = dict.squad
-  const [tab, setTab] = React.useState<(typeof SQUAD)[number]["id"]>(SQUAD[0].id)
+  const [tab, setTab] = React.useState<(typeof SQUAD)[number]>(SQUAD[0])
 
   return (
     <section id="squad" className="shell py-24 md:py-32">
@@ -33,13 +33,24 @@ export function Squad() {
         onValueChange={(v) => setTab(v as typeof tab)}
         className="mt-10"
       >
-        <TabsList className="w-full justify-start overflow-x-auto sm:w-auto sm:justify-center">
-          {SQUAD.map((cat) => (
-            <TabsTrigger key={cat.id} value={cat.id}>
-              <span aria-hidden>{cat.emoji}</span>
-              {copy.categories[cat.id].label}
+        {/*
+          على الهاتف شبكة 2×2 لا سطر واحد: التسميات عربية بطول متفاوت
+          («لجنة التحكيم» ضعف «الرعاة»)، فسطرٌ واحد إمّا يفيض خارج الشاشة
+          فيختفي تبويبان لا يعرف القارئ بوجودهما، وإمّا يلتفّ داخل حبّة
+          `rounded-full` فيخرج الشكل المكسور. الشبكة تُظهر الأربعة معاً بعرض
+          واحد، والعدّاد يذهب إلى الطرف المقابل للتسمية بدل أن يزاحمها.
+          من `sm` فصاعداً تعود الحبّة كما هي.
+        */}
+        <TabsList className="grid w-full grid-cols-2 gap-1.5 rounded-2xl sm:inline-flex sm:w-auto sm:gap-1 sm:rounded-full">
+          {SQUAD.map((id) => (
+            <TabsTrigger
+              key={id}
+              value={id}
+              className="justify-between rounded-xl px-3.5 text-[13px] sm:justify-center sm:rounded-full sm:px-5 sm:text-sm"
+            >
+              {copy.categories[id].label}
               <span className="font-plate text-[10px] tracking-[0.2em] opacity-50">
-                {String(copy.categories[cat.id].members.length).padStart(2, "0")}
+                {String(copy.categories[id].members.length).padStart(2, "0")}
               </span>
             </TabsTrigger>
           ))}
@@ -49,19 +60,19 @@ export function Squad() {
           {copy.categories[tab].blurb}
         </p>
 
-        {SQUAD.map((cat) => (
-          <TabsContent key={cat.id} value={cat.id} className="mt-6">
+        {SQUAD.map((id) => (
+          <TabsContent key={id} value={id} className="mt-6">
             <AnimatePresence mode="wait">
-              {tab === cat.id && (
+              {tab === id && (
                 <motion.ul
-                  key={cat.id}
+                  key={id}
                   initial="hidden"
                   animate="show"
                   exit={{ opacity: 0, y: -8, transition: { duration: 0.18 } }}
                   variants={{ show: { transition: { staggerChildren: 0.06 } } }}
                   className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
                 >
-                  {copy.categories[cat.id].members.map((m, i) => (
+                  {copy.categories[id].members.map((m, i) => (
                     <motion.li
                       key={m.name}
                       variants={{
@@ -80,12 +91,17 @@ export function Squad() {
                         <span className="font-plate text-4xl leading-none font-black text-ink/8 transition-colors duration-500 group-hover:text-ember/15">
                           {String(i + 1).padStart(2, "0")}
                         </span>
+                        {/*
+                          كان هنا رمز تعبيري لكل فئة. أُزيل: أربعة رموز ملوّنة
+                          فوق بطاقات ورقية هادئة هي أكثر ما يشي بقالب جاهز، ولا
+                          تنتمي إلى مفردات الموقع (اللوحات، الخطوط الشعرية،
+                          الأرقام). الخط الشعري الذي يمتدّ عند المرور يقول نفس
+                          الشيء بلغة القسم نفسه.
+                        */}
                         <span
                           aria-hidden
-                          className="text-lg transition-transform duration-500 group-hover:-rotate-12"
-                        >
-                          {cat.emoji}
-                        </span>
+                          className="mt-3 h-px w-8 bg-line transition-all duration-500 group-hover:w-14 group-hover:bg-pine/50"
+                        />
                       </div>
 
                       <h3 className="relative mt-6 font-display text-lg font-bold text-ink">
@@ -94,7 +110,7 @@ export function Squad() {
                       <p className="relative mt-1 text-sm text-ink-soft">{m.role}</p>
 
                       <div className="relative mt-5">
-                        <Badge variant="pine">{copy.categories[cat.id].label}</Badge>
+                        <Badge variant="pine">{copy.categories[id].label}</Badge>
                       </div>
                     </motion.li>
                   ))}

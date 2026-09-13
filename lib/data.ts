@@ -52,12 +52,13 @@ export const RIDER_CODE = [
   "culture",
 ] satisfies (keyof Dictionary["riderCode"]["pillars"])[]
 
+/** فئات فريق العرض بترتيب التبويبات. النصوص كلها في `squad.categories`. */
 export const SQUAD = [
-  { id: "builders", emoji: "🔧" },
-  { id: "participants", emoji: "🏁" },
-  { id: "judges", emoji: "🎖️" },
-  { id: "sponsors", emoji: "🤝" },
-] satisfies { id: keyof Dictionary["squad"]["categories"]; emoji: string }[]
+  "builders",
+  "participants",
+  "judges",
+  "sponsors",
+] satisfies (keyof Dictionary["squad"]["categories"])[]
 
 export const CTA_LANES = [
   { id: "workshops", href: "/contact?subject=workshop" },
