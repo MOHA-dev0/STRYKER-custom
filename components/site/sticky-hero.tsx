@@ -35,6 +35,13 @@ import { cn } from "@/lib/utils"
  *
  * القسم بطول ثلاث شاشات والإطار `sticky`، فالتمرير هو ما يقود التعاقب. كل ما
  * يتحرك هو `opacity` و`transform` فقط — لا تخطيط يُعاد حسابه أثناء التمرير.
+ *
+ * الوحدة `svh` لا `dvh` في طول القسم وطول الإطار معاً. على الهاتف ينطوي شريط
+ * المتصفح مع أول دفعة تمرير: مع `dvh` يكبر الإطار في تلك اللحظة، فيتغيّر طول
+ * مسار التمرير وتقفز نسبة التقدّم تحت الإصبع. أما `svh` فثابتة لا يحرّكها
+ * الشريط، فيبقى الحساب واحداً من أول الطريق إلى آخره. وثمنها شريط ورقي في
+ * أسفل الإطار حين ينطوي شريط المتصفح — غير مرئي أصلاً، لأن قناع الصورة يذوب
+ * قبله وما تحته هو ورق الطبقة الخلفية نفسه.
  */
 
 const N = HERO_STAGES.length
@@ -58,6 +65,27 @@ function rangeFor(i: number) {
     output.push(0, 1, 1, 0)
   }
   return { input, output }
+}
+
+/**
+ * هل يقود المشهدَ إصبعٌ لا عجلة فأرة؟
+ *
+ * تُقرأ بعد التركيب لا أثناء العرض على الخادم، فالقيمة الابتدائية `false`
+ * (سطح مكتب) ثم تُصحّح في أول تأثير. ولا تُستعمل إلا في اختيار مصدر التقدّم،
+ * فتبدّلها لا يعيد بناء عنصر ولا يعيد تحميل صورة.
+ */
+function useCoarsePointer() {
+  const [coarse, setCoarse] = React.useState(false)
+
+  React.useEffect(() => {
+    const query = window.matchMedia("(pointer: coarse)")
+    const sync = () => setCoarse(query.matches)
+    sync()
+    query.addEventListener("change", sync)
+    return () => query.removeEventListener("change", sync)
+  }, [])
+
+  return coarse
 }
 
 type StageCopy = Dictionary["hero"]["slides"][keyof Dictionary["hero"]["slides"]]
@@ -123,7 +151,13 @@ function StageCopyBlock({
 }) {
   const { input, output } = rangeFor(index)
   const opacity = useTransform(progress, input, output)
-  const y = useTransform(opacity, [0, 1], [22, 0])
+  // الإزاحة مشتقّة من التمرير مباشرة لا من `opacity`: سلسلة قيمتين تعني قيمة
+  // وسيطة وإشعاراً إضافياً في كل إطار، بلا أي فرق في الناتج.
+  const y = useTransform(
+    progress,
+    input,
+    output.map((o) => (1 - o) * 22)
+  )
 
   return (
     <motion.div
@@ -133,7 +167,12 @@ function StageCopyBlock({
         index === 0 ? "relative" : "pointer-events-none"
       )}
     >
-      <div className="mb-5 inline-flex items-center gap-3 rounded-full border border-line bg-paper/70 py-1.5 pe-4 ps-1.5 backdrop-blur-sm">
+      {/*
+        `backdrop-blur` فوق sm فقط: الشارة تسبح فوق طبقات تتحرك طوال بقاء الـ
+        Hero على الشاشة، وطمس ما تحتها يعيد رسمه مع كل إطار. على الهاتف يحلّ
+        ورقٌ شبه معتم محلّه — نفس القراءة بلا تلك الكلفة.
+      */}
+      <div className="mb-4 inline-flex items-center gap-2.5 rounded-full border border-line bg-paper/85 py-1.5 pe-3.5 ps-1.5 sm:mb-5 sm:gap-3 sm:bg-paper/70 sm:pe-4 sm:backdrop-blur-sm">
         <span className="grid size-7 place-items-center rounded-full bg-pine font-plate text-[11px] font-black text-paper">
           {String(index + 1).padStart(2, "0")}
         </span>
@@ -143,8 +182,10 @@ function StageCopyBlock({
       {/*
         `.plate-title` لا `font-plate`: العنوان يأتي من القاموس، فهو لاتيني في
         الإنجليزية وعربي في العربية — والصنف يبدّل الوجه والتتبّع مع الاتجاه.
+        و`.hero-title` يحمل المقاس: على الهاتف يتبع العرض لكن يسقفه الارتفاع،
+        فالعنوان الذي يلتفّ ثلاثة أسطر لا يدفع الأزرار خارج الشاشة.
       */}
-      <h1 className="plate-title text-[clamp(2.15rem,8vw,6.2rem)] leading-[0.9] rtl:leading-[1.02] font-black text-ink">
+      <h1 className="plate-title hero-title leading-[0.9] rtl:leading-[1.02] font-black text-ink">
         {copy.title.split(" / ").map((part, i, arr) => (
           <span key={part} className="block">
             <span
@@ -161,10 +202,10 @@ function StageCopyBlock({
         ))}
       </h1>
 
-      <p className="mt-3 font-display text-lg font-bold text-pine sm:mt-4 sm:text-2xl">
+      <p className="hero-drop mt-3 font-display text-lg font-bold text-pine sm:mt-4 sm:text-2xl">
         {copy.tagline}
       </p>
-      <p className="mt-2 hidden max-w-xl text-[15px] leading-loose text-ink-soft sm:mt-3 sm:block">
+      <p className="hero-drop mt-2 hidden max-w-xl text-[15px] leading-loose text-ink-soft sm:mt-3 sm:block">
         {copy.line}
       </p>
     </motion.div>
@@ -182,7 +223,11 @@ function RailDot({
 }) {
   const { input, output } = rangeFor(index)
   const opacity = useTransform(progress, input, output)
-  const scale = useTransform(opacity, [0, 1], [0.6, 1])
+  const scale = useTransform(
+    progress,
+    input,
+    output.map((o) => 0.6 + o * 0.4)
+  )
 
   return (
     <div className="relative grid size-3 place-items-center">
@@ -199,6 +244,7 @@ export function StickyHero() {
   const { dict, href } = useI18n()
   // مع تفضيل تقليل الحركة يثبت المشهد على مرحلته الأولى بلا أي ربط بالتمرير.
   const still = useReducedMotion() === true
+  const coarse = useCoarsePointer()
 
   const ref = React.useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({
@@ -207,15 +253,22 @@ export function StickyHero() {
   })
 
   /*
-   * نابض واحد بين التمرير وكل ما يتحرك في المشهد. عجلة الفأرة تصل على شكل
-   * قفزات متقطّعة؛ النابض يحوّلها إلى منحنى متصل قبل أن تلمس الرسم، و`restDelta`
-   * الصغير يوقفه تماماً عند السكون بدل أن يظل يهتزّ حول قيمته.
+   * مصدر التقدّم يختلف باختلاف ما يقود التمرير:
+   *
+   * عجلة الفأرة تصل على شكل قفزات متقطّعة، فيتوسّط نابضٌ بينها وبين الرسم
+   * يحوّلها إلى منحنى متصل، و`restDelta` الصغير يوقفه تماماً عند السكون بدل أن
+   * يظلّ يهتزّ حول قيمته.
+   *
+   * أما الإصبع فيصل متصلاً أصلاً — المتصفح نفسه يتولّى الاندفاع والارتداد — فلا
+   * يبقى للنابض ما يُنعّمه، ولا يضيف إلا تأخّراً: المشهد يتخلّف عن الإصبع أثناء
+   * السحب ويظلّ يستقرّ بعد رفعه. لذلك يمرّ تقدّم التمرير على الهاتف كما هو.
    */
-  const p = useSpring(scrollYProgress, {
+  const smoothed = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001,
   })
+  const p = coarse ? scrollYProgress : smoothed
 
   // الدراجة المقصوصة: بصرية المرحلة الأولى — تندفع للأمام ثم تسلّم للصور.
   const bikeRange = rangeFor(0)
@@ -227,18 +280,22 @@ export function StickyHero() {
    * حجاب العاج يشتدّ مع دخول الصور. المرحلة الأولى خلفيتها ورق فاتح أصلاً فلا
    * تحتاج حجاباً كاملاً — ونصفه يكفي ليذوب طرف الدراجة في الورق بدل أن يُمحى.
    */
-  const veilOpacity = useTransform(bikeOpacity, [0, 1], [1, 0.5])
+  const veilOpacity = useTransform(
+    p,
+    bikeRange.input,
+    bikeRange.output.map((o) => 1 - o * 0.5)
+  )
 
   const hintOpacity = useTransform(p, [0, 0.08], [1, 0])
-  const railScale = useTransform(p, [0, 1], [0, 1])
+  const railProgress = useTransform(p, [0, 1], [0, 1])
 
   return (
-    <section ref={ref} className="relative h-[300vh]">
+    <section ref={ref} className="relative h-[300svh]">
       {/*
         الإطار شفاف عمداً: الطبقة الخلفية الدائمة تُرى من خلاله، فتبقى العلامة
         المائية متصلة من المرحلة الأولى إلى ما بعد نهاية القسم.
       */}
-      <div className="sticky top-0 isolate h-dvh w-full overflow-hidden">
+      <div className="sticky top-0 isolate h-svh w-full overflow-hidden">
         {/* z-0 — صورتا المرحلتين الثانية والثالثة */}
         <div className="absolute inset-0 z-0">
           {HERO_STAGES.map((stage, i) =>
@@ -288,18 +345,14 @@ export function StickyHero() {
         </motion.div>
 
         {/* النقش الورقي فوق الصور — شبكة النقاط تأتي من الطبقة الخلفية الدائمة */}
-        <div className="grain pointer-events-none absolute inset-0 z-20" />
+        <div className="grain-stage pointer-events-none absolute inset-0 z-20" />
 
         {/*
-          z-30 — النصوص والأزرار.
-
-          الحشوة العلوية أكبر من السفلية بمقدار ارتفاع الهيدر بالضبط (9rem مقابل
-          3.5rem = 5.5rem وهو ‎pt-4 + h-[4.5rem]‎)، فمركز صندوق الحشو ينزل تحت
-          الهيدر ويتوسّط ما تبقّى من النافذة لا النافذة كلها. بحشوة متناظرة كان
-          المركز في منتصف النافذة، فالمرحلة الأطول — والعناوين الإنجليزية تلتفّ
-          سطراً أكثر من العربية — تفيض من الطرفين معاً وتدسّ الشارة تحت الهيدر.
+          z-30 — النصوص والأزرار. الحشوة والمقاسات في `.hero-frame`: الهاتف
+          المستلقي يمرّ من `md:` بعرضه بينما ارتفاعه نصف ارتفاعه واقفاً، وهذا ما
+          لا تلتقطه نقطة توقّف بالعرض وحدها.
         */}
-        <div className="shell relative z-30 flex h-full flex-col justify-end pt-24 pb-16 md:justify-center md:pt-36 md:pb-14">
+        <div className="hero-frame shell relative z-30 flex h-full flex-col justify-end md:justify-center">
           <div className="grid">
             {HERO_STAGES.map((stage, i) => (
               <StageCopyBlock
@@ -312,9 +365,36 @@ export function StickyHero() {
             ))}
           </div>
 
+          {/*
+            سكة التقدّم للهاتف — نظيرة أفقية للسكة الرأسية التي لا مكان لها على
+            حافة شاشة ضيّقة. بدونها يخسر الهاتف الإشارة الوحيدة إلى أن تحت
+            الإبهام ثلاث مراحل لا مشهداً واحداً، ومعها تلميح التمرير الذي يذهب
+            مع أول دفعة.
+          */}
+          <div className="mt-6 flex max-w-2xl items-center gap-3 md:hidden">
+            <div className="relative h-px w-14 bg-ink/15">
+              <motion.div
+                style={still ? { scaleX: 0 } : { scaleX: railProgress }}
+                className="gpu origin-start absolute inset-0 bg-pine"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              {HERO_STAGES.map((stage, i) => (
+                <RailDot key={stage.id} progress={p} index={i} still={still} />
+              ))}
+            </div>
+            <motion.span
+              style={still ? undefined : { opacity: hintOpacity }}
+              className="eyebrow ms-auto inline-flex items-center gap-1.5 text-ink-mute"
+            >
+              {dict.hero.scrollHint}
+              <MoveDown className="size-3.5" />
+            </motion.span>
+          </div>
+
           {/* النص الثابت + الأزرار — لا يتبدّلان بين المراحل */}
           <div className="mt-6 max-w-2xl border-t border-line pt-5 md:mt-10 md:pt-6">
-            <p className="line-clamp-2 max-w-xl text-[13px] leading-loose text-ink-soft md:line-clamp-none md:text-sm">
+            <p className="hero-drop line-clamp-2 max-w-xl text-[13px] leading-loose text-ink-soft md:line-clamp-none md:text-sm">
               {dict.hero.subtitle}
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-3 md:mt-6">
@@ -335,7 +415,7 @@ export function StickyHero() {
         <div className="pointer-events-none absolute inset-y-0 end-5 z-30 hidden flex-col items-center justify-center gap-4 md:flex lg:end-10">
           <div className="relative h-48 w-px bg-ink/10">
             <motion.div
-              style={still ? { scaleY: 0 } : { scaleY: railScale }}
+              style={still ? { scaleY: 0 } : { scaleY: railProgress }}
               className="gpu absolute inset-0 origin-top bg-pine"
             />
           </div>
@@ -345,9 +425,6 @@ export function StickyHero() {
             ))}
           </div>
         </div>
-
-        {/* تلميح التمرير */}
-        
       </div>
     </section>
   )

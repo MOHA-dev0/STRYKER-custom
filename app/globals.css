@@ -480,6 +480,92 @@
     }
   }
 
+  /* --- Hero geometry ----------------------------------------------------- */
+
+  /*
+   * The sticky hero is the one place on the site where a width breakpoint is
+   * not enough. A phone held sideways is 844px wide and 390px tall: it passes
+   * every `md:` test while having less than half the height the same phone has
+   * upright. So the frame's padding, the headline size, and which lines get
+   * dropped are settled here in plain CSS — where the short-viewport rule
+   * simply comes last and wins — rather than in Tailwind, where a `md:` class
+   * and a `max-height` class would race on variant ordering.
+   *
+   * Heights are `svh` throughout, never `dvh`: a mobile toolbar collapsing
+   * mid-scroll must not resize the scene that is being scrolled.
+   */
+
+  /*
+   * Top padding clears the fixed navbar (0.75rem + 4rem) with a little air;
+   * the bottom is free. The asymmetry is deliberate — it drops the centre of
+   * the padding box below the header rather than at the middle of the window,
+   * so the tallest stage doesn't spill from both ends at once.
+   */
+  .hero-frame {
+    padding-top: 6rem;
+    padding-bottom: 3rem;
+  }
+  @media (min-width: 768px) {
+    .hero-frame {
+      padding-top: 9rem;
+      padding-bottom: 3.5rem;
+    }
+  }
+  @media (max-height: 560px) {
+    .hero-frame {
+      padding-top: 5.5rem;
+      padding-bottom: 1.5rem;
+    }
+  }
+
+  /*
+   * The headline tracks viewport width on a phone but is capped by viewport
+   * height, so a title that wraps to three lines still cannot push the buttons
+   * off the bottom of a short screen.
+   */
+  .hero-title {
+    font-size: clamp(2.15rem, min(10.5vw, 8.5svh), 3.6rem);
+  }
+  @media (min-width: 768px) {
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 6.2rem);
+    }
+  }
+  @media (max-height: 560px) {
+    .hero-title {
+      font-size: clamp(1.75rem, 6.5svh, 2.75rem);
+    }
+  }
+
+  /* Editorial lines that are first to go when the window is too short to hold
+     the headline, the standfirst and the buttons together. */
+  @media (max-height: 560px) {
+    .hero-drop {
+      display: none;
+    }
+  }
+
+  /*
+   * The hero's own paper tooth. Same texture as `.grain`, but the multiply
+   * blend — a full-screen composite pass on every frame, over layers that move
+   * for as long as the hero is on screen — is only spent where there is GPU to
+   * spare. Phones get the same tooth composited normally instead.
+   */
+  .grain-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.08;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.26'/%3E%3C/svg%3E");
+  }
+  @media (min-width: 768px) {
+    .grain-stage::after {
+      opacity: 0.14;
+      mix-blend-mode: multiply;
+    }
+  }
+
   /* --- Persistent brand watermark --------------------------------------- */
 
   /*
