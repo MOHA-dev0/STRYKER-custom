@@ -1,26 +1,568 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ==========================================================================
+   STRYKER CUSTOM BIKE SHOW — "Warm Workshop" light theme
+   ---------------------------------------------------------------------------
+   Palette is lifted from the shield emblem, but from its quiet half: the pine
+   green of the eagle banner and the warm bone of the ribbon — not the gold.
+   Ember (a burnt clay red) is the spark accent, used sparingly.
+   Everything sits on warm paper: light, calm, high contrast, never dark.
+   ========================================================================== */
+
+@theme {
+  /* Surfaces — warm paper, never cold white */
+  --color-sand: #f7f5f0;
+  --color-sand-soft: #f0ece3;
+  --color-sand-deep: #e6e0d3;
+  --color-paper: #fffefb;
+
+  /* Ink — a green-leaning charcoal, softer on the eye than pure black */
+  --color-ink: #1a1f1d;
+  --color-ink-soft: #454c48;
+  --color-ink-mute: #767d78;
+  --color-line: #ddd7c9;
+
+  /* Primary — pine, from the emblem's banner */
+  --color-pine: #17614a;
+  --color-pine-deep: #0d4535;
+  --color-pine-mid: #2f7d63;
+  --color-pine-soft: #e3efe9;
+
+  /* Spark — burnt clay, the only warm accent. Used at ~5% of the surface. */
+  --color-ember: #c0552f;
+  --color-ember-deep: #9c3f20;
+  --color-ember-soft: #fbe9e1;
+
+  /*
+   * Gold — the emblem's loud half. Deliberately quarantined: it is only ever
+   * used for the hero watermark, at 10-16% alpha, never for text or controls.
+   */
+  --color-gold: #c9a227;
+  --color-gold-soft: #f0dca6;
+  --color-gold-deep: #8a6a1c;
+
+  /*
+   * Type — one editorial face, IBM Plex Sans Arabic, carries body and headings
+   * in both scripts. Its arabic is open and low-contrast, its latin is the same
+   * family, so nothing shifts when the locale flips. Only the plate face (the
+   * condensed latin used for numbers, indices and stencil marks) stays apart.
+   */
+  --font-sans: var(--font-plex), "IBM Plex Sans Arabic", ui-sans-serif,
+    system-ui, sans-serif;
+  --font-display: var(--font-plex), "IBM Plex Sans Arabic", ui-sans-serif,
+    system-ui, sans-serif;
+  --font-plate: var(--font-barlow), "Arial Narrow", ui-sans-serif, sans-serif;
+
+  /* Elevation — shallow, wide and warm rather than dark and tight */
+  --shadow-soft: 0 1px 2px rgba(26, 31, 29, 0.04),
+    0 12px 32px -24px rgba(26, 31, 29, 0.35);
+  --shadow-lift: 0 2px 4px rgba(26, 31, 29, 0.05),
+    0 28px 60px -34px rgba(23, 97, 74, 0.28);
+
+  /* Motion */
+  --animate-fade-in: fade-in 0.25s ease-out;
+  --animate-fade-out: fade-out 0.2s ease-in;
+  --animate-acc-down: acc-down 0.32s cubic-bezier(0.33, 1, 0.68, 1);
+  --animate-acc-up: acc-up 0.26s cubic-bezier(0.32, 0, 0.67, 0);
+  --animate-slide-in-right: slide-in-right 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-slide-out-right: slide-out-right 0.25s ease-in;
+  --animate-slide-in-left: slide-in-left 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-slide-out-left: slide-out-left 0.25s ease-in;
+  --animate-ticker: ticker 38s linear infinite;
+  --animate-drift: drift 16s ease-in-out infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes acc-down {
+  from { height: 0; opacity: 0; }
+  to { height: var(--radix-accordion-content-height); opacity: 1; }
+}
+@keyframes acc-up {
+  from { height: var(--radix-accordion-content-height); opacity: 1; }
+  to { height: 0; opacity: 0; }
+}
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes slide-out-right {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+@keyframes slide-in-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+@keyframes slide-out-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -14px, 0); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-sand);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    /* Plex has no ss01; kerning and standard ligatures are what it does carry. */
+    font-feature-settings: "kern", "liga";
+    /*
+     * The two warm washes used to live here with `background-attachment: fixed`,
+     * which repaints the whole body background on every scroll frame. They now
+     * ride on `.brand-wash` inside the fixed backdrop layer, where the
+     * compositor keeps them on a layer of their own instead.
+     */
+  }
+
+  /*
+   * Editorial headings. Plex Arabic sets a touch wide by default, so the
+   * display sizes pull back slightly and lean on 600/700 rather than heavier
+   * weights the family does not ship. Latin headings tighten a little more
+   * than arabic ones, which need the room for their ascenders.
+   */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    letter-spacing: -0.011em;
+  }
+
+  :lang(ar) h1,
+  :lang(ar) h2,
+  :lang(ar) h3 {
+    letter-spacing: 0;
+  }
+
+  /*
+   * No drop caps anywhere: an arabic initial detaches from its word and breaks
+   * the join. Neutralised here so a future prose plugin cannot reintroduce one.
+   */
+  p::first-letter,
+  .prose p::first-letter {
+    initial-letter: normal;
+    float: none;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  ::selection {
+    background: var(--color-pine);
+    color: var(--color-paper);
+  }
+
+  /* Plate/number type keeps latin lining figures in both locales. */
+  .font-plate,
+  [class*="font-plate"] {
+    font-variant-numeric: lining-nums tabular-nums;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* --- Direction -------------------------------------------------------- */
+
+  /*
+   * Tailwind has logical utilities for spacing and insets but none for
+   * transform-origin, so these two mirror themselves off the dir attribute.
+   * Used by every rule/underline that wipes in from the reading edge.
+   */
+  .origin-start {
+    transform-origin: left center;
+  }
+  [dir="rtl"] .origin-start {
+    transform-origin: right center;
+  }
+  .origin-start-top {
+    transform-origin: left top;
+  }
+  [dir="rtl"] .origin-start-top {
+    transform-origin: right top;
+  }
+
+  /* --- Texture ---------------------------------------------------------- */
+
+  /* Barely-there paper tooth. Sits above backgrounds, below content. */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.14;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.26'/%3E%3C/svg%3E");
+  }
+
+  /* Technical dot field — the workshop reference, modernised. */
+  .dot-grid {
+    background-image: radial-gradient(
+      color-mix(in oklab, var(--color-ink) 13%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 1.5rem 1.5rem;
+  }
+
+  /* Wide hairline grid, for large calm areas. */
+  .blueprint {
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--color-ink) 4%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--color-ink) 4%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 5rem 5rem;
+  }
+
+  /* Diagonal machined hatch, behind numbers and section marks. */
+  .hatch {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      color-mix(in oklab, var(--color-pine) 9%, transparent) 0 1px,
+      transparent 1px 9px
+    );
+  }
+
+  /* --- Accent marks ----------------------------------------------------- */
+
+  /*
+   * Highlighted words inside a heading: pine text over a low marker wash that
+   * only covers the lower third of the line. Replaces the old chrome gradient.
+   */
+  .accent-word {
+    color: var(--color-pine-deep);
+    text-decoration-line: underline;
+    text-decoration-color: color-mix(in oklab, var(--color-pine) 32%, transparent);
+    text-decoration-thickness: 0.07em;
+    text-underline-offset: 0.26em;
+    text-decoration-skip-ink: none;
+  }
+
+  .rule-accent {
+    background: linear-gradient(
+      to left,
+      transparent,
+      color-mix(in oklab, var(--color-pine) 45%, transparent) 20%,
+      var(--color-pine) 50%,
+      color-mix(in oklab, var(--color-pine) 45%, transparent) 80%,
+      transparent
+    );
+  }
+
+  /* Engraved corner brackets, drawn with borders so no extra markup. */
+  .brackets {
+    position: relative;
+  }
+  .brackets::before,
+  .brackets::after {
+    content: "";
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    border-color: color-mix(in oklab, var(--color-pine) 55%, transparent);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .brackets::before {
+    inset-block-start: 0.65rem;
+    inset-inline-start: 0.65rem;
+    border-top: 1px solid;
+    border-inline-start: 1px solid;
+  }
+  .brackets::after {
+    inset-block-end: 0.65rem;
+    inset-inline-end: 0.65rem;
+    border-bottom: 1px solid;
+    border-inline-end: 1px solid;
+  }
+  .brackets:hover::before,
+  .brackets:hover::after {
+    width: 1.7rem;
+    height: 1.7rem;
+    opacity: 1;
+  }
+
+  /* --- Layout helpers --------------------------------------------------- */
+
+  .shell {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 84rem;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .shell { padding-inline: 2rem; }
+  }
+  @media (min-width: 1280px) {
+    .shell { padding-inline: 3rem; }
+  }
+
+  /*
+   * --- Script-aware plate type ------------------------------------------
+   *
+   * The plate face (Barlow Condensed) ships latin only, and the wide tracking
+   * these marks live on tears apart the joins of arabic letters. So every
+   * class here has a `[dir="rtl"]` twin that hands the same mark back to the
+   * editorial face at normal tracking with no uppercasing.
+   *
+   * Rule of thumb: any string that comes out of the dictionary goes through
+   * one of these three classes. Text that stays latin in both locales — the
+   * STRYKER lockup, an email address, a social handle, digits — keeps the
+   * plain `font-plate` utility instead.
+   */
+  .eyebrow {
+    font-family: var(--font-plate);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+  }
+  [dir="rtl"] .eyebrow {
+    font-family: var(--font-display);
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 0.78rem;
+  }
+
+  /* Display-size marks: hero headlines and the giant page watermarks. */
+  .plate-title {
+    font-family: var(--font-plate);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+  [dir="rtl"] .plate-title {
+    font-family: var(--font-display);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* Small wide-tracked marks: plate lines, tickers, the scroll hint. */
+  .plate-mark {
+    font-family: var(--font-plate);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  [dir="rtl"] .plate-mark {
+    font-family: var(--font-display);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* Card shell: hairline, warm paper, wide soft lift on hover. */
+  .panel {
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* --- Compositing ------------------------------------------------------ */
+
+  /*
+   * Promotes an element to its own compositor layer. Reserved for the handful
+   * of assets that are actually driven by scroll: anything else paying the
+   * memory cost of a layer for nothing makes scrolling worse, not better.
+   */
+  .gpu {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /*
+   * The floating navbar. It never moves, so it wants a layer without the
+   * `will-change: transform` hint that would keep the compositor guessing —
+   * a zero translate is enough to pin it, and killing backface rendering stops
+   * the sub-pixel shimmer that shows up the moment the scroll comes to rest.
+   */
+  .nav-float {
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- Backdrop --------------------------------------------------------- */
+
+  /* The two warm washes, lifted off `body` onto the fixed backdrop layer. */
+  .brand-wash {
+    background-image:
+      radial-gradient(
+        62rem 44rem at 88% -14%,
+        color-mix(in oklab, var(--color-pine) 11%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        46rem 34rem at -6% 30%,
+        color-mix(in oklab, var(--color-ember) 6%, transparent),
+        transparent 66%
+      );
+  }
+
+  /*
+   * Stage photography dissolves before it reaches the reading edge, so the
+   * headline never sits on top of a photograph and the persistent watermark
+   * stays legible through the paper half of the frame. Mobile stacks the copy
+   * under the image, so there the fade runs bottom-up instead.
+   */
+  .stage-mask {
+    -webkit-mask-image: linear-gradient(
+      to top,
+      transparent 6%,
+      rgba(0, 0, 0, 0.28) 34%,
+      #000 74%
+    );
+    mask-image: linear-gradient(
+      to top,
+      transparent 6%,
+      rgba(0, 0, 0, 0.28) 34%,
+      #000 74%
+    );
+  }
+  @media (min-width: 768px) {
+    .stage-mask {
+      -webkit-mask-image: linear-gradient(
+        to left,
+        #000 0%,
+        #000 28%,
+        rgba(0, 0, 0, 0.3) 62%,
+        transparent 90%
+      );
+      mask-image: linear-gradient(
+        to left,
+        #000 0%,
+        #000 28%,
+        rgba(0, 0, 0, 0.3) 62%,
+        transparent 90%
+      );
+    }
+    [dir="rtl"] .stage-mask {
+      -webkit-mask-image: linear-gradient(
+        to right,
+        #000 0%,
+        #000 28%,
+        rgba(0, 0, 0, 0.3) 62%,
+        transparent 90%
+      );
+      mask-image: linear-gradient(
+        to right,
+        #000 0%,
+        #000 28%,
+        rgba(0, 0, 0, 0.3) 62%,
+        transparent 90%
+      );
+    }
+  }
+
+  /* --- Persistent brand watermark --------------------------------------- */
+
+  /*
+   * The shield emblem, re-cut as a soft gold gradient. Used by the fixed
+   * backdrop layer, which is mounted once for the whole document so the mark
+   * never unmounts and re-enters at a section boundary. The mask asset carries
+   * only the logo's alpha (7KB, generated from logo.png) so the gradient takes
+   * the shield's silhouette without pulling the 560KB original through CSS.
+   * The logo bitmap sits on top at a lower alpha and puts the engraving detail
+   * back, minus the original's red and black.
+   */
+  .emblem-gold {
+    background-image: linear-gradient(
+      152deg,
+      var(--color-gold-soft) 0%,
+      var(--color-gold) 34%,
+      var(--color-gold-deep) 68%,
+      var(--color-gold) 100%
+    );
+    -webkit-mask-image: url("/emblem-mask.png");
+    mask-image: url("/emblem-mask.png");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+
+  /* Warm halo that seats the watermark in the page instead of floating on it. */
+  .emblem-halo {
+    background-image: radial-gradient(
+      circle at center,
+      color-mix(in oklab, var(--color-gold) 20%, transparent) 0%,
+      color-mix(in oklab, var(--color-pine) 6%, transparent) 40%,
+      transparent 68%
+    );
+  }
+
+  /* Oval edge fade, so the watermark has no hard boundary against the paper. */
+  .fade-oval {
+    -webkit-mask-image: radial-gradient(
+      ellipse at center,
+      #000 40%,
+      transparent 74%
+    );
+    mask-image: radial-gradient(ellipse at center, #000 40%, transparent 74%);
+  }
+
+  /* Contact shadow under the cut-out bike — an ellipse, blurred, never black. */
+  .bike-shadow {
+    background-image: radial-gradient(
+      ellipse at center,
+      color-mix(in oklab, var(--color-ink) 26%, transparent) 0%,
+      transparent 70%
+    );
+    filter: blur(18px);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-sand-soft);
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--color-pine) 45%, var(--color-sand-soft));
+  border: 3px solid var(--color-sand-soft);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-pine);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

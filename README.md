@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# STRYKER CUSTOM BIKE SHOW
 
-## Getting Started
+منصة وطنية وعربية مخصصة لعرض عالم الدراجات المعدّلة والـ Custom Shows.
+موقع عربي بالكامل (RTL) مبني بـ Next.js App Router.
 
-First, run the development server:
+## التشغيل
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # بناء الإنتاج
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## التقنيات
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| الطبقة    | الأداة                                                        |
+| --------- | ------------------------------------------------------------- |
+| الإطار    | Next.js 16 (App Router, TypeScript, Turbopack)                 |
+| التنسيق   | Tailwind CSS v4 (`@theme` داخل `app/globals.css`)              |
+| المكوّنات | shadcn/ui فوق Radix UI                                         |
+| الحركة    | Framer Motion                                                  |
+| الأيقونات | lucide-react                                                   |
+| النماذج   | react-hook-form + zod                                          |
+| الخطوط    | Tajawal (متن) · Reem Kufi (عناوين) · Barlow Condensed (لاتيني) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## الهوية البصرية
 
-## Learn More
+مستخرجة من درع STRYKER — ثيم فاتح فاخر:
 
-To learn more about Next.js, take a look at the following resources:
+| الدور         | المتغير              | اللون     |
+| ------------- | -------------------- | --------- |
+| الخلفية       | `--color-ivory`      | `#FAF8F5` |
+| سطح ثانوي     | `--color-ivory-soft` | `#F4F0EA` |
+| الذهبي الملكي | `--color-gold`       | `#C5A059` |
+| ذهبي لامع     | `--color-gold-bright`| `#D4AF37` |
+| القرمزي       | `--color-crimson`    | `#C41E3A` |
+| النص          | `--color-ink`        | `#1C1917` |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+أدوات مساعدة في `globals.css`: `.text-chrome` (تدرّج كروم ذهبي على النص)،
+`.rule-gold` (خط ذهبي)، `.grain` (حبيبات فيلم)، `.blueprint` (شبكة مخططات)،
+`.hatch` (تظليل قطري)، `.brackets` (أقواس زوايا)، `.shell` (حاوية الصفحة)،
+`.eyebrow` (سطر علوي لاتيني).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## البنية
 
-## Deploy on Vercel
+```
+app/
+  layout.tsx            # RTL + الخطوط + Navbar/Footer
+  page.tsx              # الرئيسية
+  about/page.tsx        # من نحن
+  submissions/page.tsx  # المشاركات (قريباً + تسجيل مبكر)
+  contact/page.tsx      # تواصل معنا + الأسئلة الشائعة
+  not-found.tsx
+components/
+  ui/                   # مكوّنات shadcn/ui
+  site/                 # أقسام الموقع
+lib/
+  data.ts               # كل المحتوى والنصوص
+  utils.ts              # cn()
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ملاحظات
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **المحتوى** كله في [`lib/data.ts`](lib/data.ts) — عدّل النصوص والأسماء والباقات من هناك.
+- **الصور** حالياً صور مؤقتة من Unsplash (كروزر/تشوبر مخصص). استبدل الروابط في
+  `lib/data.ts` و`components/site/journey.tsx` و`components/site/story-vision.tsx`
+  بصور المشاريع الحقيقية، وأضف النطاق في `next.config.ts` إن كانت من مصدر آخر.
+- **النماذج** (المشاركات والتواصل) تتحقق من المدخلات بـ zod وتحاكي الإرسال فقط —
+  لا يوجد Backend بعد. اربط `onSubmit` في `components/site/submission-form.tsx`
+  و`components/site/contact-form.tsx` بـ Route Handler أو Server Action.
+- **الشعار** مرسوم بـ SVG في `components/site/emblem.tsx` — استبدله بالشعار الرسمي
+  عند توفره.

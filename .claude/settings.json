@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash -n deploy/deploy.sh)",
+      "Bash(tailscale status *)",
+      "Bash(tailscale ip *)",
+      "PowerShell(ssh -o ConnectTimeout=20 -o StrictHostKeyChecking=accept-new moha 'echo \"HOST: $\\(hostname\\)\"; echo \"USER: $\\(whoami\\)\"; \\(. /etc/os-release 2>/dev/null; echo \"OS: $PRETTY_NAME \\($\\(uname -m\\)\\)\"\\); echo \"--- docker ---\"; docker --version 2>/dev/null || echo \"no docker\"; docker compose version 2>/dev/null | head -1; \\(groups | tr \" \" \"\\\\n\" | grep -qx docker && echo \"user in docker group\"\\) || echo \"user NOT in docker group\"; echo \"--- cloudflared ---\"; cloudflared --version 2>/dev/null || echo \"no cloudflared\"; echo \"--- containers ---\"; docker ps --format \"{{.Names}} {{.Status}}\" 2>/dev/null; echo \"--- deploydir ---\"; ls -la /opt/toms-next 2>/dev/null || echo \"no /opt/toms-next\"')",
+      "PowerShell(ssh -o ConnectTimeout=20 moha 'sudo -n true && echo SUDO_OK || echo SUDO_NEEDS_PASSWORD')",
+      "PowerShell(ssh -o ConnectTimeout=20 moha 'sudo -n true && echo SUDO_OK || echo STILL_NEEDS_PASSWORD')",
+      "PowerShell($s = [IO.File]::ReadAllText\\(\"c:\\\\Users\\\\tasne\\\\Desktop\\\\toms-next\\\\deploy\\\\_bootstrap.sh\"\\); $s = $s.TrimStart\\([char]0xFEFF\\) -replace \"`r\",\"\"; $OutputEncoding = New-Object System.Text.UTF8Encoding $false; $s | ssh -o ConnectTimeout=25 moha 'bash -s')",
+      "PowerShell(ssh -o ConnectTimeout=25 moha 'bash -s')",
+      "Bash(printf '%s\\\\n' 'echo \"===== STAGING WEB: PDF / prisma / error \\(timestamped\\) =====\"' 'docker logs -t --tail 6000 toms-staging-web-green 2>&1 | grep -iE \"PDF generation error|Timeout! Here is|printable|PostgreSQL|prisma:error|Protocol error|net::ERR|Navigation|Failed to generate|ECONN|ENOTFOUND|getaddrinfo\" | tail -n 50' echo 'echo \"===== STAGING NGINX: /pdf requests with status =====\"' 'docker logs --tail 8000 toms-staging-nginx 2>&1 | grep -iE \"/pdf\" | tail -n 20' echo 'echo \"===== STAGING WEB: PDF_RENDER_BASE_URL / DB env present? =====\"' 'docker exec toms-staging-web-green sh -c \"env | grep -iE \\\\\"PDF_RENDER_BASE_URL|DATABASE_URL|PUPPETEER\\\\\" | sed -E \\\\\"s/\\(DATABASE_URL=\\).*/\\\\\\\\1<redacted>/\\\\\"\" || true')",
+      "PowerShell($s = [IO.File]::ReadAllText\\(\"c:\\\\Users\\\\tasne\\\\Desktop\\\\toms-next\\\\deploy\\\\_probe3.sh\"\\) -replace \"`r\",\"\"; $b64 = [Convert]::ToBase64String\\([Text.Encoding]::UTF8.GetBytes\\($s\\)\\); ssh -o ConnectTimeout=25 moha \"echo $b64 | base64 -d | bash\")"
+    ]
+  }
+}
