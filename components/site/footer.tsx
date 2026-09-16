@@ -2,11 +2,23 @@ import Image from "next/image"
 import Link from "next/link"
 import { BadgeCheck, Mail, MapPin } from "lucide-react"
 
-import { ENDORSEMENT, NAV_LINKS, SITE } from "@/lib/data"
+import { ENDORSEMENTS, NAV_LINKS, SITE } from "@/lib/data"
 import { localeHref } from "@/lib/i18n/config"
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries"
 import { Emblem } from "@/components/site/emblem"
 import { Ticker } from "@/components/site/ticker"
+
+/*
+ * ارتفاع كل شعار بصري لا هندسي: لو استوت الثلاثة على ارتفاع واحد لبدا
+ * الختم الدائري (مجلس التعاون) أصغر من الشعارين العريضين، والقفل المكوّن من
+ * رمز فوق سطرين (الاتحاد السعودي) أقصر نصاً من كليهما. الأرقام هنا تسوّي
+ * الكتلة المرئية لا الصندوق.
+ */
+const ENDORSEMENT_HEIGHT: Record<(typeof ENDORSEMENTS)[number]["id"], string> = {
+  ministry: "h-8 md:h-9",
+  samf: "h-11 md:h-12",
+  gcc: "h-10 md:h-11",
+}
 
 /** أيقونات المنصات مرسومة يدوياً — lucide لم يعد يشحن أيقونات العلامات. */
 const SOCIAL_GLYPHS: Record<string, React.ReactNode> = {
@@ -115,19 +127,40 @@ export async function Footer() {
           </div>
 
           {/*
-            الاعتماد الرسمي — سطر مُصغّر داخل عمود التواصل: خيط فاصل رقيق
-            فوق الشعار، ثم تسمية موجزة. المسافة = margin عمود space-y-4
-            زائد pt-5، فلا يلتصق بشريط الحقوق ولا يزحزح الشبكة.
+            الجهات الرسمية — تُذيّل عمود التواصل تحت أيقونات المنصات مباشرة.
+            خيط فاصل رقيق ثم العنوان، فصفّ الشعارات، فجملة الإشراف: الترتيب
+            يضع أكبر عنصر بصري في الوسط فلا يزاحم العنوان ولا يُقرأ كتعليق
+            على أيقونات التواصل فوقه.
+
+            بلا لوح ولا إطار خلف الشعارات — الملفات شفافة وتقع على الورق
+            الرملي مباشرة.
           */}
-          <div className="flex items-center gap-3 border-t border-line pt-5">
-            <Image
-              src={ENDORSEMENT.logo}
-              alt={dict.footer.endorsement.logoAlt}
-              width={ENDORSEMENT.width}
-              height={ENDORSEMENT.height}
-              className="h-9 w-auto shrink-0 object-contain opacity-90"
-            />
-            <p className="flex min-w-0 items-center gap-1.5 text-[11px] leading-snug text-ink-mute">
+          <div className="border-t border-line pt-5">
+            <p className="eyebrow text-ink-mute">
+              {dict.footer.endorsement.heading}
+            </p>
+
+            <ul className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-4">
+              {ENDORSEMENTS.map((body) => (
+                <li key={body.id}>
+                  <Image
+                    src={body.logo}
+                    alt={dict.footer.endorsement.logos[body.id]}
+                    width={body.width}
+                    height={body.height}
+                    /*
+                      بلا هذا السطر يقرأ Next العرض المصرَّح (٧٣٨px للوزارة)
+                      ويطلب الملف بحجمه الكامل، والشعار لا يُرسم إلا في نحو
+                      ١٢٠px. التلميح يقصره على أقرب مقاس مولَّد.
+                    */
+                    sizes="(min-width: 768px) 9rem, 8rem"
+                    className={`${ENDORSEMENT_HEIGHT[body.id]} w-auto object-contain`}
+                  />
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-4 flex items-center gap-1.5 text-[11px] leading-snug text-ink-mute">
               <BadgeCheck className="size-3.5 shrink-0 text-pine" />
               {dict.footer.endorsement.caption}
             </p>

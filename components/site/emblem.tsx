@@ -13,12 +13,12 @@ const RATIO = 507 / 493
 export function Emblem({
   className,
   size = 96,
-  preload = false,
+  priority = false,
 }: {
   className?: string
   size?: number
-  /** يحقن وسم `<link rel="preload">` — للشعار الظاهر فوق الطية فقط. */
-  preload?: boolean
+  /** يمنح الصورة أولوية التحميل — للشعار الظاهر فوق الطية فقط. */
+  priority?: boolean
 }) {
   return (
     <Image
@@ -26,7 +26,8 @@ export function Emblem({
       alt={SITE.name}
       width={size}
       height={Math.round(size * RATIO)}
-      preload={preload}
+      priority={priority}
+      loading={priority ? "eager" : undefined}
       className={cn("h-10 w-auto object-contain select-none", className)}
     />
   )

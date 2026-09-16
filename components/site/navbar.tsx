@@ -77,7 +77,7 @@ export function Navbar() {
             className="group flex items-center gap-3 outline-none focus-visible:ring-2 focus-visible:ring-pine/40 focus-visible:ring-offset-4 focus-visible:ring-offset-sand"
           >
             <Emblem
-              preload
+              priority
               size={112}
               className="h-10 transition-transform duration-500 group-hover:-rotate-3 md:h-12"
             />

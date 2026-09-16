@@ -65,7 +65,7 @@ export const en: Dictionary = {
 
   site: {
     location: "Kingdom of Saudi Arabia — Madinah",
-    tagline: "BUILT TO BE DIFFERENT",
+    tagline: "DESIGNED TO BE DIFFERENT",
   },
 
   nav: {
@@ -314,7 +314,7 @@ export const en: Dictionary = {
     },
     primaryCta: "Register your early entry",
     secondaryCta: "Talk to the team",
-    ticker: ["STRYKER 2026", "CUSTOM SHOWS", "SAUDI BUILDERS", "BUILT TO BE DIFFERENT"],
+    ticker: ["STRYKER 2026", "CUSTOM SHOWS", "SAUDI BUILDERS", "DESIGNED TO BE DIFFERENT"],
   },
 
   footer: {
@@ -323,7 +323,7 @@ export const en: Dictionary = {
     navHeading: "NAVIGATION",
     contactHeading: "CONTACT",
     ticker: [
-      "BUILT TO BE DIFFERENT",
+      "DESIGNED TO BE DIFFERENT",
       "STRYKER CUSTOM BIKE SHOW 2026",
       "SAUDI CUSTOM CULTURE",
       "MADE IN SAUDI ARABIA",
@@ -331,8 +331,13 @@ export const en: Dictionary = {
     copyright: "© 2026 STRYKER",
     rights: "All rights reserved to the STRYKER custom bike platform",
     endorsement: {
+      heading: "OFFICIAL BODIES",
       caption: "Supervised by the Ministry of Sport",
-      logoAlt: "Emblem of the Ministry of Sport of the Kingdom of Saudi Arabia",
+      logos: {
+        ministry: "Emblem of the Ministry of Sport of the Kingdom of Saudi Arabia",
+        samf: "Emblem of the Saudi Automobile & Motorcycle Federation",
+        gcc: "Emblem of the Cooperation Council for the Arab States of the Gulf",
+      },
     },
   },
 

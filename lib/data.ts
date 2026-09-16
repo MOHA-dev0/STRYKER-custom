@@ -200,18 +200,25 @@ export const STORY_IMAGE =
   "https://images.unsplash.com/photo-1783668992941-a52bb1f59c42?auto=format&fit=crop&w=1400&q=80"
 
 /**
- * الاعتماد الرسمي المعروض في التذييل.
+ * شعارات الجهات الرسمية المعروضة في شريط التذييل.
  *
- * الشعار أصل خارجي غير مرفوع بعد: ضع ملف الجهة الرسمي في
- * `public/ministry-of-sport.png` (يفضّل PNG بخلفية شفافة، عرض ≥ 720px).
- * المقاسان هنا للنسبة فقط — الصورة تُعرض بـ `object-contain` فلا تتشوّه
- * إن اختلفت نسبة الملف الفعلي.
+ * الملفات الثلاثة في `public/` بخلفية شفافة — لا تستبدلها بنسخ ذات خلفية
+ * بيضاء: الشريط يعرضها على الورق الرملي مباشرة بلا لوح خلفها، فأي خلفية
+ * معتمة ستظهر كمستطيل مقصوص.
+ *
+ * المقاسات هنا هي أبعاد الملفات الحقيقية ليحجز المتصفح مكانها قبل التحميل؛
+ * العرض النهائي بارتفاع بصري يُحدَّد في التذييل و`object-contain` يحفظ النسبة.
  */
-export const ENDORSEMENT = {
-  logo: "/ministry-of-sport.png",
-  width: 360,
-  height: 120,
-}
+export const ENDORSEMENTS = [
+  { id: "ministry", logo: "/ministry-of-sport.png", width: 738, height: 228 },
+  { id: "samf", logo: "/SAMF.png", width: 691, height: 361 },
+  { id: "gcc", logo: "/gcc.png", width: 500, height: 500 },
+] satisfies {
+  id: keyof Dictionary["footer"]["endorsement"]["logos"]
+  logo: string
+  width: number
+  height: number
+}[]
 
 /**
  * الثوابت غير المترجمة. لا شعار نصي هنا: `tagline` يُقرأ من

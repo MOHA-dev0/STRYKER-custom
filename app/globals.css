@@ -645,20 +645,25 @@
   .emblem-halo {
     background-image: radial-gradient(
       circle at center,
-      color-mix(in oklab, var(--color-gold) 20%, transparent) 0%,
-      color-mix(in oklab, var(--color-pine) 6%, transparent) 40%,
-      transparent 68%
+      color-mix(in oklab, var(--color-gold) 26%, transparent) 0%,
+      color-mix(in oklab, var(--color-pine) 8%, transparent) 40%,
+      transparent 70%
     );
   }
 
-  /* Oval edge fade, so the watermark has no hard boundary against the paper. */
+  /*
+   * Oval edge fade, so the watermark has no hard boundary against the paper.
+   * The opaque core runs to 54% rather than 40%: the crest, the wings and the
+   * KSA banner all sit inside that radius, and fading them out was what made
+   * the mark read as a smudge instead of a badge. Only the outer rim dissolves.
+   */
   .fade-oval {
     -webkit-mask-image: radial-gradient(
       ellipse at center,
-      #000 40%,
-      transparent 74%
+      #000 54%,
+      transparent 84%
     );
-    mask-image: radial-gradient(ellipse at center, #000 40%, transparent 74%);
+    mask-image: radial-gradient(ellipse at center, #000 54%, transparent 84%);
   }
 
   /* Contact shadow under the cut-out bike — an ellipse, blurred, never black. */

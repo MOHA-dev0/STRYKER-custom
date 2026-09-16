@@ -62,12 +62,16 @@ function useIsDesktop() {
 function EmblemArt() {
   return (
     <>
-      <div className="emblem-halo absolute aspect-square w-[min(90vw,42rem)] opacity-50 md:w-[min(130vw,70rem)] md:opacity-100" />
-      <div className="fade-oval relative aspect-[493/507] h-[min(46vw,26svh)] max-h-[36rem] md:h-[min(62svh,38rem)]">
-        {/* التدرج الذهبي بشكل الدرع — الشفافيتان معاً تبقيان الكثافة ~14% */}
-        <div className="emblem-gold absolute inset-0 opacity-[0.05] md:opacity-[0.14]" />
+      <div className="emblem-halo absolute aspect-square w-[min(90vw,42rem)] opacity-60 md:w-[min(130vw,70rem)] md:opacity-100" />
+      <div className="fade-oval relative aspect-[493/507] h-[min(50vw,28svh)] max-h-[36rem] md:h-[min(66svh,41rem)]">
         {/*
-          نقش الشعار نفسه، أخفت، ليعيد التفاصيل فوق التدرج.
+          التدرج الذهبي بشكل الدرع — يعطي العلامة معدنها قبل أن يأتي النقش
+          فوقه بالتفاصيل. الكثافتان هنا وفي الصورة تُقرآن معاً: ~20% على
+          سطح المكتب، وأقل من نصف ذلك على الهاتف حيث النص أقرب إلى العلامة.
+        */}
+        <div className="emblem-gold absolute inset-0 opacity-[0.09] md:opacity-[0.2]" />
+        {/*
+          نقش الشعار نفسه فوق التدرج، يعيد إليه حروفه وأجنحته ودرّاجته.
 
           كان `loading="eager"` — و Next يحقن له حينها `<link rel="preload">`،
           فيقف ملفٌ زخرفي بكثافة 7% في طابور واحد مع دراجة الـ Hero التي هي
@@ -80,8 +84,8 @@ function EmblemArt() {
           width={493}
           height={507}
           fetchPriority="low"
-          sizes="(min-width: 768px) 38rem, 46vw"
-          className="absolute inset-0 h-full w-full object-contain opacity-[0.025] saturate-[0.55] md:opacity-[0.07]"
+          sizes="(min-width: 768px) 41rem, 50vw"
+          className="absolute inset-0 h-full w-full object-contain opacity-[0.075] saturate-[0.85] md:opacity-[0.16]"
         />
       </div>
     </>
