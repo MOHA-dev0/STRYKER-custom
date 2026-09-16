@@ -3,8 +3,9 @@ import { Suspense } from "react"
 import { Mail, MapPin, Share2, Clock } from "lucide-react"
 
 import { SITE } from "@/lib/data"
-import { localeAlternates } from "@/lib/i18n/config"
+import { localeAlternates, localeHref } from "@/lib/i18n/config"
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries"
+import { contactJsonLd, JsonLd } from "@/lib/seo"
 import { PageHero } from "@/components/site/page-hero"
 import { ContactForm } from "@/components/site/contact-form"
 import { Faq } from "@/components/site/faq"
@@ -16,7 +17,18 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: dict.meta.contact.title,
     description: dict.meta.contact.description,
+    keywords: [...dict.meta.contact.keywords],
     alternates: localeAlternates(locale, "/contact"),
+    /* البطاقة ترث الصورة والموقع من الجذر؛ العنوان وحده يخصّ الصفحة. */
+    openGraph: {
+      title: dict.meta.contact.title,
+      description: dict.meta.contact.description,
+      url: localeHref(locale, "/contact"),
+    },
+    twitter: {
+      title: dict.meta.contact.title,
+      description: dict.meta.contact.description,
+    },
   }
 }
 
@@ -27,11 +39,15 @@ function ContactFormFallback() {
 }
 
 export default async function ContactPage() {
+  const locale = await getLocale()
   const dict = await getDictionary()
   const copy = dict.contact
 
   return (
     <>
+      {/* البيانات المهيكلة — تُقرأ للفهرسة ولا تظهر في الصفحة. */}
+      <JsonLd data={contactJsonLd(locale, dict)} />
+
       <PageHero
         index="01"
         eyebrow={copy.hero.eyebrow}

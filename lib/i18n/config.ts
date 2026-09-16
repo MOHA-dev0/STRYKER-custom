@@ -52,12 +52,19 @@ export function swapLocale(pathname: string, next: Locale): string {
  * Canonical + hreflang alternates for one route, in every locale.
  * Must be set per page: declaring it once on the root layout would make every
  * page canonical to the locale home page.
+ *
+ * `x-default` points at the source locale. Without it a crawler has no route to
+ * send a visitor whose language matches neither entry, and the proxy's own
+ * `Accept-Language` redirect never gets a chance to run for them.
  */
 export function localeAlternates(locale: Locale, path: string) {
   return {
     canonical: localeHref(locale, path),
-    languages: Object.fromEntries(
-      LOCALES.map((l) => [l, localeHref(l, path)])
-    ) as Record<Locale, string>,
+    languages: {
+      ...(Object.fromEntries(
+        LOCALES.map((l) => [l, localeHref(l, path)])
+      ) as Record<Locale, string>),
+      "x-default": localeHref(DEFAULT_LOCALE, path),
+    },
   }
 }

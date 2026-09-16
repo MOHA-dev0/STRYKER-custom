@@ -6,9 +6,10 @@ import { BrandBackdrop } from "@/components/site/brand-backdrop"
 import { Navbar } from "@/components/site/navbar"
 import { Footer } from "@/components/site/footer"
 import { SITE } from "@/lib/data"
-import { dirOf, LOCALES, OG_LOCALE } from "@/lib/i18n/config"
+import { dirOf, localeHref, LOCALES, OG_LOCALE } from "@/lib/i18n/config"
 import { getLocaleOrDefault, loadDictionary } from "@/lib/i18n/dictionaries"
 import { I18nProvider } from "@/lib/i18n/context"
+import { absoluteUrl } from "@/lib/seo"
 
 /**
  * الخط الأساسي — IBM Plex Sans Arabic.
@@ -42,6 +43,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const dict = await loadDictionary(locale)
 
   return {
+    /*
+      كل رابط نسبي بعد هذا السطر يُحلّ على هذا الأصل: بطاقات المشاركة لا تقبل
+      المسارات النسبية، وبدونه تصير صور الـ OG روابط مكسورة عند فيسبوك وتويتر.
+    */
     metadataBase: new URL(SITE.url),
     title: {
       default: `${SITE.name} — ${dict.meta.home.title}`,
@@ -49,22 +54,71 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: dict.meta.home.description,
     keywords: [...dict.meta.home.keywords],
-    icons: {
-      icon: [{ url: "/logo.png", type: "image/png" }],
-      apple: [{ url: "/logo.png" }],
-    },
+    applicationName: SITE.name,
+    authors: [{ name: SITE.name, url: SITE.url }],
+    creator: SITE.name,
+    publisher: SITE.name,
+    category: "automotive",
+    manifest: "/manifest.webmanifest",
+    /*
+      لا `icons` هنا: `app/icon.png` و`app/apple-icon.png` و`app/favicon.ico`
+      اصطلاحات ملفات، وNext يولّد وسومها بنفسه ببصمة تخزين مؤقت. أي تعريف
+      يدوي هنا يلغيها ويعيدنا إلى ملف واحد بلا مقاسات.
+
+      أما بطاقة المشاركة فتُعرَّف يدوياً: اصطلاح `opengraph-image` يحتاج موضعاً
+      ثابتاً، وجذر التطبيق هنا مقطع متغيّر (`[lang]`). تُولَّد الصورة من الشعار
+      عبر `scripts/gen-icons.js`.
+    */
     openGraph: {
-      title: SITE.name,
-      description: dict.meta.home.description,
-      images: [{ url: "/logo.png", width: 493, height: 507, alt: SITE.name }],
-      locale: OG_LOCALE[locale],
       type: "website",
+      siteName: SITE.name,
+      title: `${SITE.name} — ${dict.meta.home.title}`,
+      description: dict.meta.home.description,
+      url: localeHref(locale, "/"),
+      locale: OG_LOCALE[locale],
+      /* اللغة الأخرى تُعلن كبديل، فتعرف الشبكات أن النسختين موقع واحد. */
+      alternateLocale: LOCALES.filter((l) => l !== locale).map((l) => OG_LOCALE[l]),
+      images: [
+        {
+          url: absoluteUrl("/og.png"),
+          width: 1200,
+          height: 630,
+          alt: `${SITE.name} — ${dict.meta.home.title}`,
+        },
+      ],
+    },
+    /* لا `images` هنا: تويتر يرث صورة الـ OG حين لا تُحدَّد له صورة خاصة. */
+    twitter: {
+      card: "summary_large_image",
+      title: `${SITE.name} — ${dict.meta.home.title}`,
+      description: dict.meta.home.description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        /* بلا سقف على المقتطف ولا على معاينة الصورة: المحتوى كله للعرض. */
+        "max-snippet": -1,
+        "max-image-preview": "large",
+        "max-video-preview": -1,
+      },
+    },
+    /* أرقام السنوات ولوحات المعارض ليست هواتف — بلا هذا تحوّلها سفاري روابط. */
+    formatDetection: { telephone: false, address: false, email: false },
+    appleWebApp: {
+      capable: true,
+      title: SITE.short,
+      statusBarStyle: "default",
     },
   }
 }
 
 export const viewport: Viewport = {
   themeColor: "#f7f5f0",
+  /* الموقع ورقي فاتح فقط؛ إعلانها يمنع المتصفح من قلب ألوان النماذج ليلاً. */
+  colorScheme: "light",
 }
 
 export default async function RootLayout({

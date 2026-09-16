@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import * as React from "react"
 import { AnimatePresence, motion } from "framer-motion"
@@ -17,7 +17,7 @@ export function Squad() {
   return (
     <section id="squad" className="shell py-24 md:py-32">
       <SectionHeading
-        index="04"
+        index="05"
         eyebrow={copy.eyebrow}
         title={
           <>
@@ -33,14 +33,6 @@ export function Squad() {
         onValueChange={(v) => setTab(v as typeof tab)}
         className="mt-10"
       >
-        {/*
-          على الهاتف شبكة 2×2 لا سطر واحد: التسميات عربية بطول متفاوت
-          («لجنة التحكيم» ضعف «الرعاة»)، فسطرٌ واحد إمّا يفيض خارج الشاشة
-          فيختفي تبويبان لا يعرف القارئ بوجودهما، وإمّا يلتفّ داخل حبّة
-          `rounded-full` فيخرج الشكل المكسور. الشبكة تُظهر الأربعة معاً بعرض
-          واحد، والعدّاد يذهب إلى الطرف المقابل للتسمية بدل أن يزاحمها.
-          من `sm` فصاعداً تعود الحبّة كما هي.
-        */}
         <TabsList className="grid w-full grid-cols-2 gap-1.5 rounded-2xl sm:inline-flex sm:w-auto sm:gap-1 sm:rounded-full">
           {SQUAD.map((id) => (
             <TabsTrigger
@@ -73,46 +65,13 @@ export function Squad() {
                   className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
                 >
                   {copy.categories[id].members.map((m, i) => (
-                    <motion.li
+                    <SquadCard
                       key={m.name}
-                      variants={{
-                        hidden: { opacity: 0, y: 22 },
-                        show: {
-                          opacity: 1,
-                          y: 0,
-                          transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-                        },
-                      }}
-                      className="brackets group relative overflow-hidden rounded-xl border border-line bg-paper p-6 shadow-soft transition-all duration-500 hover:-translate-y-1 hover:border-pine/30 hover:shadow-lift"
-                    >
-                      <div className="hatch absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-30" />
-
-                      <div className="relative flex items-start justify-between gap-4">
-                        <span className="font-plate text-4xl leading-none font-black text-ink/8 transition-colors duration-500 group-hover:text-ember/15">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        {/*
-                          كان هنا رمز تعبيري لكل فئة. أُزيل: أربعة رموز ملوّنة
-                          فوق بطاقات ورقية هادئة هي أكثر ما يشي بقالب جاهز، ولا
-                          تنتمي إلى مفردات الموقع (اللوحات، الخطوط الشعرية،
-                          الأرقام). الخط الشعري الذي يمتدّ عند المرور يقول نفس
-                          الشيء بلغة القسم نفسه.
-                        */}
-                        <span
-                          aria-hidden
-                          className="mt-3 h-px w-8 bg-line transition-all duration-500 group-hover:w-14 group-hover:bg-pine/50"
-                        />
-                      </div>
-
-                      <h3 className="relative mt-6 font-display text-lg font-bold text-ink">
-                        {m.name}
-                      </h3>
-                      <p className="relative mt-1 text-sm text-ink-soft">{m.role}</p>
-
-                      <div className="relative mt-5">
-                        <Badge variant="pine">{copy.categories[id].label}</Badge>
-                      </div>
-                    </motion.li>
+                      index={i}
+                      categoryLabel={copy.categories[id].label}
+                      soon={copy.soon}
+                      soonHint={copy.soonHint}
+                    />
                   ))}
                 </motion.ul>
               )}
@@ -121,5 +80,76 @@ export function Squad() {
         ))}
       </Tabs>
     </section>
+  )
+}
+
+function SquadCard({
+  index,
+  categoryLabel,
+  soon,
+  soonHint,
+}: {
+  index: number
+  categoryLabel: string
+  soon: string
+  soonHint: string
+}) {
+  const [showSoon, setShowSoon] = React.useState(false)
+
+  return (
+    <motion.li
+      variants={{
+        hidden: { opacity: 0, y: 22 },
+        show: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+        },
+      }}
+      className="brackets group relative overflow-hidden rounded-xl border border-line bg-paper p-6 shadow-soft transition-all duration-500 hover:-translate-y-1 hover:border-pine/30 hover:shadow-lift cursor-pointer select-none"
+      onClick={() => setShowSoon(true)}
+    >
+      <div className="hatch absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-30" />
+
+      <AnimatePresence>
+        {showSoon && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 rounded-xl bg-paper/95 backdrop-blur-sm"
+            onClick={(e) => {
+              e.stopPropagation()
+              setShowSoon(false)
+            }}
+          >
+            <span className="plate-title text-3xl font-black text-pine">
+              {soon}
+            </span>
+            <span className="text-xs text-ink-soft">{soonHint}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="relative flex items-start justify-between gap-4">
+        <span className="font-plate text-4xl leading-none font-black text-ink/8 transition-colors duration-500 group-hover:text-ember/15">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <span
+          aria-hidden
+          className="mt-3 h-px w-8 bg-line transition-all duration-500 group-hover:w-14 group-hover:bg-pine/50"
+        />
+      </div>
+
+      <div className="relative mt-6 space-y-2">
+        <div className="h-4 w-2/3 rounded bg-ink/6" />
+        <div className="h-3 w-1/2 rounded bg-ink/4" />
+      </div>
+
+      <div className="relative mt-5">
+        <Badge variant="pine">{categoryLabel}</Badge>
+      </div>
+    </motion.li>
   )
 }

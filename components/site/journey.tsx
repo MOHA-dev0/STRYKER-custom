@@ -25,7 +25,7 @@ export async function Journey() {
         <div>
           <Reveal className="flex items-center gap-3">
             <span className="font-plate text-[11px] font-black tracking-[0.3em] text-ember-deep">
-              06
+              07
             </span>
             <span className="rule-accent h-px w-10" />
             <span className="eyebrow text-pine-deep">{copy.eyebrow}</span>

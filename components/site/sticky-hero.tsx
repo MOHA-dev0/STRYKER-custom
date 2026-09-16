@@ -49,30 +49,77 @@ import { cn } from "@/lib/utils"
  */
 
 const N = HERO_STAGES.length
-const FADE = 0.07 // نصف عرض منطقة التلاشي بين مرحلتين
+
+/*
+ * التبديل بين مرحلتين تسليمٌ لا مزج.
+ *
+ * حين تتداخل نافذتا التلاشي — الخارجة ما تزال نصف ظاهرة والداخلة قد بدأت — يرى
+ * القارئ عنوانين فوق بعضهما وشارتين ورقمين، وهو الشبح الذي يفسد المشهد. لذلك
+ * تنتهي الورقة الخارجة عند الحد `b` تماماً وتبدأ الداخلة منه: لا لحظة يظهر فيها
+ * نصّان معاً.
+ *
+ * ولئلا يترك التسليم فجوة بيضاء عند `b`، يُوزَّع الزمن لا بالتساوي: الخارجة
+ * تبقى كاملة ثم تسقط في آخر النافذة (`easeInSoft`)، والداخلة تقفز إلى الظهور في
+ * أولها (`easeOutSoft`). فالمجموع المرئي يبقى قريباً من الواحد طوال العبور.
+ */
+const SWAP = 0.085 // طول نافذة الدخول أو الخروج على شريط التقدم [0..1]
+const SHIFT = 26 // إزاحة الورقة رأسياً: تصعد الخارجة وتطلع الداخلة من تحتها (px)
+
+/*
+ * منحنيا التسهيل مكتوبان هنا لا مستوردان: دالتان بسطر واحد لا تستحقان ربطاً
+ * بسطح framer-motion العام.
+ */
+const easeOutSoft = (t: number) => 1 - Math.pow(1 - t, 2.2)
+const easeInSoft = (t: number) => Math.pow(t, 2.2)
+const linear = (t: number) => t
+
+type Easing = (t: number) => number
 
 /** الأبعاد الأصلية لـ `/bike.webp` — تُحجز نسبتها فلا يقفز التخطيط (CLS). */
 const BIKE_W = 1354
 const BIKE_H = 925
 
-/** حدود ظهور المرحلة رقم i على شريط التقدم [0..1]. */
+/**
+ * جدول المرحلة رقم i على شريط التقدم [0..1]: نقاط الإدخال، والعتامة والإزاحة
+ * عند كل نقطة، ومنحنى التسهيل بين كل نقطتين (فطوله أقصر بواحد كما يشترط
+ * `useTransform`).
+ *
+ * المرحلة الأولى لا نافذة دخول لها (تبدأ ظاهرة)، والأخيرة لا نافذة خروج
+ * (تبقى إلى نهاية المسار).
+ */
 function rangeFor(i: number) {
   const start = i / N
   const end = (i + 1) / N
+
   const input: number[] = []
   const output: number[] = []
+  const shift: number[] = []
+  const ease: Easing[] = []
 
   if (i === 0) {
-    input.push(0, end - FADE, end + FADE)
-    output.push(1, 1, 0)
-  } else if (i === N - 1) {
-    input.push(start - FADE, start + FADE, 1)
-    output.push(0, 1, 1)
+    input.push(0)
+    output.push(1)
+    shift.push(0)
   } else {
-    input.push(start - FADE, start + FADE, end - FADE, end + FADE)
-    output.push(0, 1, 1, 0)
+    input.push(start, start + SWAP)
+    output.push(0, 1)
+    shift.push(SHIFT, 0)
+    ease.push(easeOutSoft)
   }
-  return { input, output }
+
+  if (i === N - 1) {
+    input.push(1)
+    output.push(1)
+    shift.push(0)
+    ease.push(linear)
+  } else {
+    input.push(end - SWAP, end)
+    output.push(1, 0)
+    shift.push(0, -SHIFT)
+    ease.push(linear, easeInSoft)
+  }
+
+  return { input, output, shift, ease }
 }
 
 /** يُشغَّل قبل الرسم على العميل حتى لا يُرى إطار واحد بالتخطيط الخطأ. */
@@ -142,12 +189,14 @@ function StagePhoto({
   still: boolean
 }) {
   const stage = HERO_STAGES[index]
-  const { input, output } = rangeFor(index)
-  const opacity = useTransform(progress, input, output)
+  const { input, output, ease } = rangeFor(index)
+  const opacity = useTransform(progress, input, output, { ease })
+  // التقريب البطيء يمتدّ على المرحلة كلها وما حولها، فلا يقف عند حدود التبديل:
+  // الصورة تظلّ تزحف طوال بقائها فلا تبدو لقطة جامدة.
   const scale = useTransform(
     progress,
-    [index / N - 0.15, (index + 1) / N + 0.15],
-    [1.14, 1]
+    [index / N - SWAP, (index + 1) / N + SWAP],
+    [1.12, 1]
   )
 
   return (
@@ -189,15 +238,12 @@ function StageCopyBlock({
   copy: StageCopy
   still: boolean
 }) {
-  const { input, output } = rangeFor(index)
-  const opacity = useTransform(progress, input, output)
+  const { input, output, shift, ease } = rangeFor(index)
+  const opacity = useTransform(progress, input, output, { ease })
   // الإزاحة مشتقّة من التمرير مباشرة لا من `opacity`: سلسلة قيمتين تعني قيمة
-  // وسيطة وإشعاراً إضافياً في كل إطار، بلا أي فرق في الناتج.
-  const y = useTransform(
-    progress,
-    input,
-    output.map((o) => (1 - o) * 22)
-  )
+  // وسيطة وإشعاراً إضافياً في كل إطار، بلا أي فرق في الناتج. وهي ذات اتجاه —
+  // الخارجة تصعد والداخلة تطلع من تحتها — فيقرأ التبديل كتتابع لا كومضة.
+  const y = useTransform(progress, input, shift, { ease })
 
   // عنوان واحد `h1` في المستند؛ عنوانا المرحلتين التاليتين `h2` بنفس المقاس.
   const Title = index === 0 ? "h1" : "h2"
@@ -263,12 +309,13 @@ function RailDot({
   index: number
   still: boolean
 }) {
-  const { input, output } = rangeFor(index)
-  const opacity = useTransform(progress, input, output)
+  const { input, output, ease } = rangeFor(index)
+  const opacity = useTransform(progress, input, output, { ease })
   const scale = useTransform(
     progress,
     input,
-    output.map((o) => 0.6 + o * 0.4)
+    output.map((o) => 0.6 + o * 0.4),
+    { ease }
   )
 
   return (
@@ -313,17 +360,23 @@ export function StickyHero() {
    * السحب ويظلّ يستقرّ بعد رفعه. لذلك يمرّ تقدّم التمرير على اللمس كما هو.
    */
   const smoothed = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
+    stiffness: 80,
+    damping: 28,
+    restDelta: 0.0005,
   })
   const p = coarse ? scrollYProgress : smoothed
 
   // الدراجة المقصوصة: بصرية المرحلة الأولى — تندفع للأمام ثم تسلّم للصور.
   const bikeRange = rangeFor(0)
-  const bikeOpacity = useTransform(p, bikeRange.input, bikeRange.output)
-  const bikeScale = useTransform(p, [0, 1 / N + FADE], [0.94, 1.12])
-  const bikeY = useTransform(p, [0, 1 / N + FADE], [18, -46])
+  const bikeOpacity = useTransform(p, bikeRange.input, bikeRange.output, {
+    ease: bikeRange.ease,
+  })
+  // الاندفاع يهدأ قبل التسليم (`easeOutSoft`) فلا تغادر الدراجة وهي في ذروة
+  // سرعتها، ومداه أقصر من السابق: حركة أقلّ تعني شبحاً أقلّ خلف النص.
+  const bikeScale = useTransform(p, [0, 1 / N], [0.94, 1.1], {
+    ease: easeOutSoft,
+  })
+  const bikeY = useTransform(p, [0, 1 / N], [14, -40], { ease: easeOutSoft })
 
   /*
    * حجاب العاج يشتدّ مع دخول الصور. المرحلة الأولى خلفيتها ورق فاتح أصلاً فلا
@@ -332,7 +385,8 @@ export function StickyHero() {
   const veilOpacity = useTransform(
     p,
     bikeRange.input,
-    bikeRange.output.map((o) => 1 - o * 0.5)
+    bikeRange.output.map((o) => 1 - o * 0.5),
+    { ease: bikeRange.ease }
   )
 
   const railProgress = useTransform(p, [0, 1], [0, 1])

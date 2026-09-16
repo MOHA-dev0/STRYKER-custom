@@ -4,6 +4,7 @@ import Link from "next/link"
 import { IBM_Plex_Sans_Arabic, Barlow_Condensed } from "next/font/google"
 
 import "./globals.css"
+import { SITE } from "@/lib/data"
 import { dirOf, isLocale, localeHref, DEFAULT_LOCALE } from "@/lib/i18n/config"
 import { loadDictionary } from "@/lib/i18n/dictionaries"
 import { Button } from "@/components/ui/button"
@@ -33,6 +34,13 @@ const barlow = Barlow_Condensed({
 
 export const metadata: Metadata = {
   title: "404",
+  /*
+    الصفحة تتخطى التخطيط الجذر، فلا ترث `metadataBase` منه ولا سياسة الفهرسة:
+    لولا هذين السطرين لحُلّت صورة المشاركة على `localhost` — ولَفهرس الزاحف
+    صفحة خطأ.
+  */
+  metadataBase: new URL(SITE.url),
+  robots: { index: false, follow: true },
 }
 
 export default async function GlobalNotFound() {

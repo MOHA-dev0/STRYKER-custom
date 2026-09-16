@@ -1,9 +1,11 @@
 import type { Metadata } from "next"
 
 import { localeAlternates } from "@/lib/i18n/config"
-import { getLocale } from "@/lib/i18n/dictionaries"
+import { getDictionary, getLocale } from "@/lib/i18n/dictionaries"
+import { homeJsonLd, JsonLd } from "@/lib/seo"
 import { StickyHero } from "@/components/site/sticky-hero"
 import { Essence } from "@/components/site/essence"
+import { Lineup } from "@/components/site/lineup"
 import { RiderCode } from "@/components/site/rider-code"
 import { Participations } from "@/components/site/participations"
 import { Journey } from "@/components/site/journey"
@@ -17,12 +19,22 @@ export async function generateMetadata(): Promise<Metadata> {
   return { alternates: localeAlternates(locale, "/") }
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const locale = await getLocale()
+  const dict = await getDictionary()
+
   return (
     <>
+      {/*
+        البيانات المهيكلة للصفحة: الجهة، والموقع بلغتيه، والمشاركات كفعاليات.
+        تُصيَّر على الخادم ولا تصل حزمة المتصفح.
+      */}
+      <JsonLd data={homeJsonLd(locale, dict)} />
+
       <StickyHero />
       <StatsBar />
       <Essence />
+      <Lineup />
       <RiderCode />
       <Squad />
       <Participations limit={3} />

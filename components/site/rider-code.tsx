@@ -36,7 +36,7 @@ export async function RiderCode() {
         <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
           <Reveal className="flex items-center gap-3">
             <span className="font-plate text-[11px] font-black tracking-[0.3em] text-ember-deep">
-              03
+              04
             </span>
             <span className="rule-accent h-px w-10" />
             {/*

@@ -3,40 +3,68 @@ import type { Dictionary } from "./ar"
 /**
  * English dictionary. Typed as `Dictionary`, so a key missing here (or renamed
  * in ar.ts) is a compile error rather than a blank string at runtime.
+ *
+ * Arabic is the source language: every string here is a translation of its twin
+ * in `ar.ts`, not an independent piece of copy. When the two drift, ar.ts wins.
  */
 export const en: Dictionary = {
   meta: {
     home: {
       title: "The Custom Bike Platform",
       description:
-        "A Saudi and Arab platform built to showcase the world of custom bikes and custom shows: builders, workshops, projects, and judging held to international standards.",
+        "A Saudi platform for custom motorcycles, classic cars and sport cars: builders, workshops, projects and judging held to international standards, with a record of our shows inside Saudi Arabia and beyond.",
       keywords: [
-        "custom bikes",
+        "custom motorcycles",
         "custom bike show",
-        "STRYKER",
-        "motorcycle show",
-        "Saudi Arabia",
+        "classic cars",
+        "sport cars",
+        "Saudi motorcycle show",
+        "motorcycle customisation",
+        "custom workshops",
+        "STRYKER CUSTOM BIKE SHOW",
+        "custom bike show Saudi Arabia",
+        "Kingdom of Saudi Arabia",
       ],
     },
     about: {
       title: "About",
       description:
-        "The story, vision and mission behind STRYKER CUSTOM BIKE SHOW, the fourteen stages of a show build, and the growth plan.",
+        "The story, vision and mission behind STRYKER CUSTOM BIKE SHOW, the fourteen stages of a show build, and the growth plan from identity to international entries.",
+      keywords: [
+        "about STRYKER",
+        "STRYKER vision",
+        "custom bike build stages",
+        "custom culture in Saudi Arabia",
+        "custom bike judging standards",
+      ],
     },
     submissions: {
-      title: "Entries & Highlights",
+      title: "Entries & Events",
       description:
-        "The record of STRYKER's shows and events, plus the interest form for custom bike owners and workshops looking to enter the 2026 season.",
+        "The record of STRYKER's shows and events inside Saudi Arabia and abroad, plus the interest form for custom bike owners and workshops looking to enter the 2026 season.",
+      keywords: [
+        "custom bike expos",
+        "custom bike events",
+        "register a custom bike entry",
+        "season 2026",
+        "motorcycle shows in the Gulf",
+      ],
     },
     contact: {
       title: "Contact",
       description:
         "Reach the STRYKER CUSTOM BIKE SHOW team about sponsorship, workshop partnerships, entry questions, or anything else.",
+      keywords: [
+        "motorcycle event sponsorship",
+        "custom workshop partnership",
+        "contact STRYKER",
+        "entry enquiry",
+      ],
     },
   },
 
   site: {
-    location: "Kingdom of Saudi Arabia — Riyadh",
+    location: "Kingdom of Saudi Arabia — Madinah",
     tagline: "BUILT TO BE DIFFERENT",
   },
 
@@ -60,44 +88,44 @@ export const en: Dictionary = {
       discover: {
         eyebrow: "STRYKER CUSTOM BIKE SHOW 2026",
         title: "DISCOVER STRYKER",
-        tagline: "Step into the STRYKER world",
-        line: "A Saudi and Arab platform built to showcase the world of custom bikes and custom shows.",
+        tagline: "From the workshop to the show floor",
+        line: "A Saudi and Arab platform dedicated to the world of custom motorcycles.",
         alt: "A custom STRYKER motorcycle under show lighting",
       },
       build: {
-        eyebrow: "STRYKER BUILD & DEVELOPMENT PLAN 2026",
-        title: "HOSAM 1 / CUSTOM 2026",
+        eyebrow: "STRYKER BUILD & DEVELOPMENT PLAN 2025",
+        title: "THE BEGINNING 2025",
         tagline: "The build and development plan",
         line: "Fourteen stages from teardown to the show floor — one identity, and no half measures in the execution.",
         alt: "Build stages of a custom motorcycle inside the workshop",
       },
       shows: {
         eyebrow: "SHOWS & ACHIEVEMENTS",
-        title: "BUILT TO BE DIFFERENT",
-        tagline: "Shows and achievements",
+        title: "DESIGNED TO BE DIFFERENT",
+        tagline: "A record that speaks for itself",
         line: "Seven entries, five first places, and an open road toward Gulf and international competition.",
         alt: "Custom motorcycles lined up on the show floor",
       },
     },
     subtitle:
-      "At STRYKER CUSTOM BIKE SHOW we celebrate bikes that carry their owner's fingerprint. Every modification, every detail, every bold idea has a place here. Join the largest gathering of custom bike enthusiasts in the Kingdom.",
+      "At STRYKER CUSTOM BIKE SHOW we celebrate bikes that carry their owner's fingerprint. Every modification, every detail, every bold idea has a place here. Join the largest gathering of custom motorcycle enthusiasts in the Kingdom of Saudi Arabia and the Gulf.",
     primaryCta: "Submit your entry",
     secondaryCta: "Explore the platform",
     scrollHint: "SCROLL",
   },
 
   stats: {
-    first: { label: "First place", note: "FIRST PLACE" },
-    entries: { label: "Official entries", note: "OFFICIAL ENTRIES" },
-    launch: { label: "Year one", note: "EST." },
-    stages: { label: "Build stages", note: "BUILD STAGES" },
+    first: { label: "First place", note: "On the judging stand" },
+    entries: { label: "Official entries", note: "Shows and events" },
+    launch: { label: "Year one", note: "Year founded" },
+    stages: { label: "Build stages", note: "From teardown to the show floor" },
   },
 
   essence: {
     eyebrow: "WHO WE ARE · VISION · MISSION",
-    titleLead: "A Saudi platform shaping ",
-    titleAccent: "the custom scene",
-    lead: "STRYKER CUSTOM BIKE SHOW is a community and a platform that brings builders, workshops and project owners under one roof: we document every bike stage by stage, run shows with clear judging standards, and open the road for Saudi work to be seen locally, across the Gulf and worldwide.",
+    titleLead: "A platform for everyone who loves ",
+    titleAccent: "the custom motorcycle world",
+    lead: "Our aim is to make a space where talent and creators come together. We want to be the platform where the Custom community meets, at home and across the Gulf, and to carry the work of young builders to a far wider audience.",
     marks: [
       { k: "2025", v: "Year one" },
       { k: "07", v: "Show entries" },
@@ -105,56 +133,91 @@ export const en: Dictionary = {
     ],
     pillars: {
       story: {
-        code: "OUR STORY",
+        code: "THE BEGINNING",
         title: "Our story",
-        body: "STRYKER CUSTOM BIKE SHOW grew out of a genuine passion for the custom bike world, and out of the Yamaha Stryker the project took its name from. The word STRYKER carries the sense of strength and initiative — and from it came an identity set on presenting custom work as art, done professionally.",
+        body: "STRYKER CUSTOM BIKE SHOW grew out of a genuine passion for the custom bike world, and out of the Yamaha Stryker the project took its name from. The word STRYKER carries the sense of the striker and of strength, and from it came an identity set on presenting custom work as art, done professionally.",
       },
       vision: {
-        code: "OUR VISION",
+        code: "THE ROAD",
         title: "Our vision",
         body: "For STRYKER CUSTOM BIKE SHOW to become a leading Saudi and Arab platform in Custom Show culture, raising the standard of organising and building to compete with Gulf and international events.",
       },
       mission: {
-        code: "OUR MISSION",
+        code: "THE COMMITMENT",
         title: "Our mission",
-        body: "To show the beauty of the custom bike as a work of art, to back the talent and the specialist workshops, and to connect them with an audience that cares and with partners and sponsors — while encouraging quality and responsibility.",
+        body: "To show the beauty of the custom bike as a work of art in its own right, to back enthusiasts and specialist workshops, and to connect them with an audience that cares and with partners and sponsors — while encouraging safety, quality and responsibility.",
       },
     },
     cta: "Read the full story",
   },
 
+  /**
+   * What the platform shows — three tracks, not one. Their order and icons live
+   * in `LINEUP` inside `lib/data.ts`.
+   */
+  lineup: {
+    eyebrow: "WHAT WE SHOW",
+    titleLead: "Three tracks, one platform — ",
+    titleAccent: "metal that deserves an audience",
+    lead: "STRYKER is not only a bike show: custom motorcycles, classic cars and sport cars. Three cultures held together by one craft and one set of judging standards.",
+    tracks: {
+      bikes: {
+        code: "TRACK ONE",
+        title: "Custom motorcycles",
+        body: "From cruisers and bobbers to choppers and café racers — builds measured on concept, execution and a clean frame before anything else.",
+        tags: ["Custom", "Bobber", "Chopper", "Café racer"],
+      },
+      classic: {
+        code: "TRACK TWO",
+        title: "Classic cars",
+        body: "Cars brought back to life in good faith with the original: a full restoration, correct parts, and paint that honours the factory colour or reimagines it with taste.",
+        tags: ["Restoration", "Restomod", "Original parts"],
+      },
+      sport: {
+        code: "TRACK THREE",
+        title: "Sport cars",
+        body: "Performance you can see and hear: engine, suspension and exhaust work, and bodies built for the road and the track to clear safety standards.",
+        tags: ["Performance", "Suspension", "Body kit"],
+      },
+    },
+    note: "Each track has its own judging class and its own prep schedule within the season.",
+  },
+
   riderCode: {
-    eyebrow: "THE RIDER CHARTER",
-    code: "STRYKER CODE",
+    eyebrow: "ROAD CULTURE",
+    code: "THE RIDER CHARTER",
     titleLead: "Ride with responsibility, ",
     titleAccent: "carry the passion safely",
-    lead: "We do not simply put custom bikes on a stand — we carry a culture built on safety, respect, and full compliance with the law.",
+    lead: "We do not simply put custom bikes on a stand — we carry a considered culture built on safety, respect, and full compliance with the law.",
     pillars: {
       safety: {
-        code: "SAFETY FIRST",
+        code: "FIRST RULE",
         title: "Safety first",
-        body: "Full commitment to protective gear and a certified helmet, on the road and at every event.",
+        body: "Full commitment to protective gear and a certified helmet — on show, on the move, and at every event.",
       },
       compliance: {
-        code: "LEGAL & COMPLIANCE",
+        code: "LAW & TRAFFIC",
         title: "Respect for the law",
         body: "Riding by the book: traffic rules honoured, and no reckless showing off on public roads.",
       },
       community: {
-        code: "COMMUNITY & BROTHERHOOD",
+        code: "BROTHERHOOD & PASSION",
         title: "The spirit of the group",
-        body: "Backing builders and entrants, and trading know-how in the spirit of the sport we share.",
+        body: "Backing builders and entrants, and trading know-how in the spirit of the sport and the passion we share.",
       },
       culture: {
-        code: "TRUE BIKER CULTURE",
-        title: "The face we show",
+        code: "RIDER CULTURE",
+        title: "Representing the right image",
         body: "Reflecting the civil, respectable face of the Kingdom's riding community to the public and the press.",
       },
     },
   },
 
   squad: {
-    eyebrow: "THE MAIN SQUAD",
+    eyebrow: "THE SHOW CREW",
+    /** Sits over a member card for as long as the names are not cleared to publish. */
+    soon: "Coming soon",
+    soonHint: "Tap to close",
     titleLead: "The main squad — ",
     titleAccent: "the names behind the metal",
     lead: "Builders, entrants, judges and sponsors. Every name here adds a layer to the identity of the show.",
@@ -205,7 +268,7 @@ export const en: Dictionary = {
   },
 
   journey: {
-    eyebrow: "OUR JOURNEY / LAUNCH STORY",
+    eyebrow: "OUR JOURNEY · LAUNCH STORY",
     title: "We launched in 2025",
     paragraphs: [
       "It started with a personal obsession with a Yamaha Stryker — one bike and one idea: make it different. The project grew from a private build in a small workshop into a full identity with a name, a story, and a clear development path.",
@@ -218,7 +281,7 @@ export const en: Dictionary = {
       { k: "05", v: "First places" },
       { k: "2026", v: "National and Gulf expansion" },
     ],
-    imageAlt: "A custom bike tank hand-painted with pine airbrush work",
+    imageAlt: "A custom bike tank hand-painted with gold airbrush work",
     imageEyebrow: "EST. 2025 · RIYADH",
     imageCaption: "From a single workshop to a national platform",
     plate: "HOSAM 1",
@@ -231,19 +294,19 @@ export const en: Dictionary = {
     lead: "Whether you run a workshop, hold an airbrush gun, or are looking for a real audience for your brand — there is an open lane for you inside STRYKER CUSTOM BIKE SHOW.",
     lanes: {
       workshops: {
-        code: "WORKSHOPS & BUILDERS",
+        code: "REGISTER & DOCUMENT",
         title: "Workshops and builders",
         body: "Register your workshop, document your projects on the platform, and get priority placement in upcoming shows.",
         cta: "Register your workshop",
       },
       artists: {
-        code: "AIRBRUSH ARTISTS",
+        code: "ART & PAINT",
         title: "Airbrush artists",
         body: "Put your work on real tanks and fenders in front of an audience that reads the details, and take part in the live art corner.",
         cta: "Join as an artist",
       },
       sponsors: {
-        code: "SPONSORS & BRANDS",
+        code: "SPONSORSHIP & VISIBILITY",
         title: "Sponsors and brands",
         body: "Sponsorship packages with presence across the show, the platform and the content, plus clear reach reporting after every event.",
         cta: "Request the sponsorship deck",
@@ -261,11 +324,11 @@ export const en: Dictionary = {
     contactHeading: "CONTACT",
     ticker: [
       "BUILT TO BE DIFFERENT",
-      "CUSTOM BIKE SHOW 2026",
+      "STRYKER CUSTOM BIKE SHOW 2026",
       "SAUDI CUSTOM CULTURE",
       "MADE IN SAUDI ARABIA",
     ],
-    copyright: "© 2026 STRYKER — ALL RIGHTS RESERVED",
+    copyright: "© 2026 STRYKER",
     rights: "All rights reserved to the STRYKER custom bike platform",
     endorsement: {
       caption: "Supervised by the Ministry of Sport",
@@ -274,12 +337,20 @@ export const en: Dictionary = {
   },
 
   participations: {
-    eyebrow: "SHOWS & HIGHLIGHTS",
-    titleLead: "The record of ",
-    titleAccent: "shows and entries",
+    eyebrow: "ENTRIES & EVENTS",
+    titleLead: "The record of attendance ",
+    titleAccent: "and entries",
     lead: "A record of the milestones and expos the STRYKER platform and its bikes have taken part in.",
     detailsCta: "See the details",
     moreCta: "Explore more",
+    /** Venue filter — separates what happened inside the Kingdom from what happened abroad. */
+    filters: {
+      label: "Filter by where the event was held",
+      all: "All",
+      local: "Inside Saudi Arabia",
+      international: "Outside Saudi Arabia",
+    },
+    empty: "No entries are on record in this scope yet.",
     truncated: "These are the latest {shown} of {total} entries in the record.",
     events: {
       "riyadh-custom-expo-2025": {
@@ -317,6 +388,20 @@ export const en: Dictionary = {
         description:
           "The first edition of the show the platform runs itself: builders, workshops and airbrush artists under one roof, with a jury whose standards are published and a clear stage schedule for every entry.",
       },
+      "dubai-custom-riders-2026": {
+        title: "Dubai custom riders' meet",
+        location: "Dubai — United Arab Emirates",
+        badge: "International entry 🌍",
+        description:
+          "The platform's first outing beyond the Kingdom: a Saudi stand inside a regional meet that gathers the workshops of the Gulf, and a presentation of the judging standards we work to in front of organisers from outside Saudi Arabia.",
+      },
+      "manama-bike-fest-2026": {
+        title: "Manama Bike Festival",
+        location: "Manama — Kingdom of Bahrain",
+        badge: "Regional guest ⭐",
+        description:
+          "An invitation to enter the Gulf class with two bikes from the STRYKER community, and the start of an exchange of entries with show organisers in Bahrain and the Eastern Province.",
+      },
     },
   },
 
@@ -333,69 +418,69 @@ export const en: Dictionary = {
       titleAccent: "documented works of art",
       lead: "STRYKER is not a seasonal event, it is infrastructure for a whole culture: documentation, judging, partnerships, and a clear growth path that lifts Saudi work to international show standards.",
       imageAlt: "A custom chopper with bespoke flame paintwork",
-      imageEyebrow: "CRAFT OVER QUANTITY",
+      imageEyebrow: "CRAFT BEFORE QUANTITY",
       imageCaption: "The metal tells the story, we put it on record",
       pillars: {
         story: {
-          code: "OUR STORY",
+          code: "THE BEGINNING",
           title: "The story",
-          body: "STRYKER CUSTOM BIKE SHOW grew out of a genuine passion for the custom bike world, and out of the Yamaha Stryker the project took its name from. The word STRYKER carries the sense of strength and initiative — and from it came an identity set on presenting custom work as art, done professionally.",
+          body: "STRYKER CUSTOM BIKE SHOW grew out of a genuine passion for the custom bike world, and out of the Yamaha Stryker the project took its name from. The word STRYKER carries the sense of strength and initiative, and from it came an identity set on presenting custom work as art, done professionally.",
         },
         vision: {
-          code: "OUR VISION",
+          code: "THE ROAD",
           title: "The vision",
           body: "For STRYKER CUSTOM BIKE SHOW to become a leading Saudi and Arab platform in Custom Show culture, raising the standard of organising and building to compete with Gulf and international events.",
         },
         mission: {
-          code: "OUR MISSION",
+          code: "THE COMMITMENT",
           title: "The mission",
           body: "To show the beauty of the custom bike as a work of art, to back the talent and the specialist workshops, and to connect them with an audience that cares and with partners and sponsors — while encouraging quality and responsibility.",
         },
       },
     },
     stages: {
-      eyebrow: "14 STAGES OF DEVELOPMENT",
+      eyebrow: "THE FULL BUILD PATH",
       titleLead: "Building the STRYKER show bike — ",
       titleAccent: "fourteen stages",
       lead: "From the first coat of paint to the last pass of polish before the judging stand. Every stage has an acceptance standard, and the bike does not move on until it is signed off.",
       items: [
         {
-          code: "PAINT & IDENTITY",
+          code: "FINISH",
           title: "Paint & overall identity",
           desc: "Signing off the identity colour, the airbrush work and the tank logo.",
         },
         {
-          code: "DESIGN & COHESION",
+          code: "DESIGN",
           title: "Design & detail cohesion",
           desc: "Aligning lines and proportions so the bike reads as one piece.",
         },
         {
-          code: "ACCESSORIES & CNC",
+          code: "FABRICATION",
           title: "Accessories & CNC parts",
           desc: "Machining bespoke parts to digital precision instead of off-the-shelf.",
         },
         {
-          code: "CHROME & POLISH",
+          code: "SURFACES",
           title: "Chrome & polish",
           desc: "Treating the metal surfaces and bringing up the reflection.",
         },
         {
-          code: "ENGINE & MECHANICAL",
+          code: "MECHANICALS",
           title: "Engine & mechanical prep",
           desc: "Full service, performance tuning and heat management.",
         },
         {
-          code: "EXHAUST SYSTEM",
+          code: "EXHAUST",
           title: "Exhaust system",
           desc: "A bespoke outlet balancing sound against performance.",
         },
         {
-          code: "WHEELS & TIRES",
+          code: "WHEELS",
           title: "Wheels & tires",
           desc: "Custom widths matched to the line of the frame.",
         },
         {
-          code: "SUSPENSION & STANCE",
+          code: "SUSPENSION",
           title: "Suspension & ride height",
           desc: "Setting the stance and the bike's line front and rear.",
         },
@@ -410,29 +495,29 @@ export const en: Dictionary = {
           desc: "Hand-stitched leather cut to the project's identity.",
         },
         {
-          code: "TANK & FENDERS",
+          code: "BODYWORK",
           title: "Tank & fenders",
           desc: "Reshaping the outer lines of the bike.",
         },
         {
-          code: "FRAME & WIRING",
+          code: "WIRING",
           title: "Frame & wiring loom",
           desc: "Strengthening the frame and hiding the loom for a clean look.",
         },
         {
-          code: "SAFETY & BUILD QUALITY",
+          code: "SAFETY",
           title: "Safety & build quality",
           desc: "Brakes, fixings and welds reviewed before any stage is signed off.",
         },
         {
-          code: "SHOW, PHOTO & INNOVATION",
+          code: "PRESENTATION",
           title: "Show, photo & innovation prep",
           desc: "Display angle, lighting and final photography before judging.",
         },
       ],
     },
     growth: {
-      eyebrow: "SHORT GROWTH PLAN",
+      eyebrow: "WHERE WE ARE HEADED",
       titleLead: "The short growth plan — ",
       titleAccent: "from identity to the world stage",
       lead: "Six consecutive stages, starting with a finished identity and ending with the Kingdom represented at international custom bike shows.",
@@ -449,7 +534,7 @@ export const en: Dictionary = {
           body: "Bringing in workshops, builders and project owners and documenting their work on the platform.",
         },
         {
-          code: "LOCAL SHOWS",
+          code: "SHOWS",
           title: "Local shows",
           body: "Running shows in the major cities alongside local authorities and sponsors.",
         },
@@ -459,12 +544,12 @@ export const en: Dictionary = {
           body: "Adopting a clear judging rulebook and competitive classes recognised locally.",
         },
         {
-          code: "GCC EXPANSION",
+          code: "THE GULF",
           title: "Gulf expansion",
           body: "Partnerships with show organisers across the Gulf and exchanged entries.",
         },
         {
-          code: "INTERNATIONAL",
+          code: "GOING GLOBAL",
           title: "International entries",
           body: "Representing the Kingdom at global custom bike shows with Saudi builds.",
         },
@@ -474,14 +559,14 @@ export const en: Dictionary = {
 
   submissions: {
     badge: "Early registration open",
-    eyebrow: "SUBMISSIONS · 2026",
+    eyebrow: "ENTRIES · 2026",
     backdrop: "ENTRIES",
     titleLead: "Enter your build in ",
     titleAccent: "season 2026",
     titlePlate: "ENTRIES · SEASON 2026",
-    lead: "Both halves of taking part live here: the record of the shows and events we have been through, and the form to register your interest in putting your bike on the stage next season.",
+    lead: "One page, two halves: the record of the shows and events we have been through, and the gateway to register your interest in putting your bike on the stage next season.",
     ticker: ["EARLY REGISTRATION OPEN", "BE FIRST IN THE QUEUE", "STRYKER 2026"],
-    howEyebrow: "HOW IT WORKS",
+    howEyebrow: "ENTRY STEPS",
     howTitle: "How an entry works",
     steps: [
       {
@@ -550,8 +635,9 @@ export const en: Dictionary = {
       title: "Get in touch — the team behind the platform is close by",
       lead: "Sponsorship, a workshop partnership, a question about entering, or just a question about the next show. Pick a subject and we will route your message to the right person.",
     },
-    infoEyebrow: "CONTACT INFO",
+    infoEyebrow: "CONTACT CHANNELS",
     infoTitle: "Contact information",
+    /** Headings of the three info cards. */
     cards: {
       email: "EMAIL",
       location: "LOCATION",
@@ -568,7 +654,7 @@ export const en: Dictionary = {
       general: "General enquiry",
     },
     form: {
-      eyebrow: "SEND A MESSAGE",
+      eyebrow: "CONTACT FORM",
       title: "Send your message",
       lead: "Pick the right subject so your message lands with the right person on the team straight away.",
       nameLabel: "Name",
@@ -598,7 +684,7 @@ export const en: Dictionary = {
   },
 
   faq: {
-    eyebrow: "FAQ",
+    eyebrow: "BEFORE YOU ASK",
     titleLead: "Frequently asked ",
     titleAccent: "questions",
     lead: "The questions we get most before an entry or a sponsorship. Not finding your answer? Send us a message directly.",
@@ -613,11 +699,11 @@ export const en: Dictionary = {
       },
       {
         q: "Is entry limited to Saudi Arabia only?",
-        a: "We started in Saudi Arabia, and we welcome entries and garages from across the Gulf states and the Arab world.",
+        a: "We started in the Kingdom of Saudi Arabia, and we welcome entries and garages from across the Gulf states and the Arab world.",
       },
       {
         q: "How do I reach the support team?",
-        a: "Through the contact form on this page or at info@stryker-customs.com. We usually reply within one to three working days; during show season a reply can take a little longer.",
+        a: "Through the “Contact us” form on this page or at info@stryker-customs.com. We usually reply within one to three working days; during show season a reply can take a little longer.",
       },
       {
         q: "What is the partnership and sponsorship policy?",

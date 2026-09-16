@@ -15,6 +15,11 @@ const eslintConfig = defineConfig([
     // Claude Code skill templates — not part of the app source.
     ".claude/**",
   ]),
+  // Build-time Node scripts: CommonJS on purpose, they never ship to the app.
+  {
+    files: ["scripts/**/*.js"],
+    rules: { "@typescript-eslint/no-require-imports": "off" },
+  },
 ]);
 
 export default eslintConfig;

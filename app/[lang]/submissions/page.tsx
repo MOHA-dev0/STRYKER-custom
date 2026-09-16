@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import { Camera, ClipboardCheck, Hammer, Timer } from "lucide-react"
 
-import { localeAlternates } from "@/lib/i18n/config"
+import { localeAlternates, localeHref } from "@/lib/i18n/config"
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries"
+import { JsonLd, submissionsJsonLd } from "@/lib/seo"
 import { Badge } from "@/components/ui/badge"
 import { Participations } from "@/components/site/participations"
 import { Reveal, RevealGroup, RevealItem } from "@/components/site/reveal"
@@ -17,16 +18,31 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: dict.meta.submissions.title,
     description: dict.meta.submissions.description,
+    keywords: [...dict.meta.submissions.keywords],
     alternates: localeAlternates(locale, "/submissions"),
+    /* البطاقة ترث الصورة والموقع من الجذر؛ العنوان وحده يخصّ الصفحة. */
+    openGraph: {
+      title: dict.meta.submissions.title,
+      description: dict.meta.submissions.description,
+      url: localeHref(locale, "/submissions"),
+    },
+    twitter: {
+      title: dict.meta.submissions.title,
+      description: dict.meta.submissions.description,
+    },
   }
 }
 
 export default async function SubmissionsPage() {
+  const locale = await getLocale()
   const dict = await getDictionary()
   const copy = dict.submissions
 
   return (
     <>
+      {/* البيانات المهيكلة — تُقرأ للفهرسة ولا تظهر في الصفحة. */}
+      <JsonLd data={submissionsJsonLd(locale, dict)} />
+
       {/* الغلاف */}
       <section className="relative overflow-hidden border-b border-line bg-sand-soft">
         <div className="blueprint pointer-events-none absolute inset-0 opacity-70" />

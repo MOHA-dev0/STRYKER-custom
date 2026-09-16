@@ -35,7 +35,7 @@ export const HERO_STAGES = [
 }[]
 
 export const ACHIEVEMENTS = [
-  { id: "first", value: 5, display: "05" },
+  { id: "first", value: 4, display: "04" },
   { id: "entries", value: 7, display: "07" },
   { id: "launch", value: 2025, display: "2025" },
   { id: "stages", value: 14, display: "14" },
@@ -51,6 +51,17 @@ export const RIDER_CODE = [
   "community",
   "culture",
 ] satisfies (keyof Dictionary["riderCode"]["pillars"])[]
+
+/**
+ * ما تعرضه المنصة — الدراجات النارية المعدّلة، والسيارات الكلاسيك، وسيارات
+ * السبورت. بترتيب العرض؛ الأيقونات تُربط داخل المكوّن حتى لا يسحب هذا الملف
+ * — وهو مستورَد في مكوّنات العميل — أي شيء من lucide.
+ */
+export const LINEUP = [
+  "bikes",
+  "classic",
+  "sport",
+] satisfies (keyof Dictionary["lineup"]["tracks"])[]
 
 /** فئات فريق العرض بترتيب التبويبات. النصوص كلها في `squad.categories`. */
 export const SQUAD = [
@@ -102,7 +113,16 @@ export const NAV_LINKS = [
 ] satisfies { id: keyof Dictionary["nav"]["links"]; href: string }[]
 
 /**
- * سجل المشاركات — المعرّف والسنة والصورة والوجهة فقط.
+ * نطاق الفعالية — داخل المملكة أو خارجها.
+ * يقود مرشّح «داخل السعودية / خارجها» في قسم المشاركات، وهو حقل غير مترجم
+ * لأن الترجمة تخصّ عنوان الزر لا قيمة الحقل.
+ */
+export const PARTICIPATION_SCOPES = ["all", "local", "international"] as const
+
+export type ParticipationScope = (typeof PARTICIPATION_SCOPES)[number]
+
+/**
+ * سجل المشاركات — المعرّف والسنة والنطاق والصورة والوجهة فقط.
  * العنوان والمكان والوسام والوصف مترجمة في `participations.events` بالقاموسين.
  *
  * مرتّبة زمنياً من الأقدم إلى الأحدث؛ أضف أي فعالية جديدة في نهاية المصفوفة.
@@ -112,12 +132,14 @@ export const NAV_LINKS = [
 export const PARTICIPATIONS = [
   {
     id: "riyadh-custom-expo-2025",
+    scope: "local",
     year: "2025",
     image: "/backgorund.webp",
     href: "/about",
   },
   {
     id: "jeddah-motor-show-2025",
+    scope: "local",
     year: "2025",
     image:
       "https://images.unsplash.com/photo-1546801375-cb25ea841643?auto=format&fit=crop&w=1400&q=80",
@@ -125,6 +147,7 @@ export const PARTICIPATIONS = [
   },
   {
     id: "eastern-riders-meet-2025",
+    scope: "local",
     year: "2025",
     image:
       "https://images.unsplash.com/photo-1783668992941-a52bb1f59c42?auto=format&fit=crop&w=1400&q=80",
@@ -132,6 +155,7 @@ export const PARTICIPATIONS = [
   },
   {
     id: "riyadh-season-motors-2026",
+    scope: "local",
     year: "2026",
     image:
       "https://images.unsplash.com/photo-1780853740000-441ba8208ed5?auto=format&fit=crop&w=1400&q=80",
@@ -139,13 +163,31 @@ export const PARTICIPATIONS = [
   },
   {
     id: "stryker-showcase-2026",
+    scope: "local",
     year: "2026",
     image:
       "https://images.unsplash.com/photo-1785100292412-97886edb1978?auto=format&fit=crop&w=1400&q=80",
     href: "/about",
   },
+  {
+    id: "dubai-custom-riders-2026",
+    scope: "international",
+    year: "2026",
+    image:
+      "https://images.unsplash.com/photo-1546801375-cb25ea841643?auto=format&fit=crop&w=1400&q=80",
+    href: "/about",
+  },
+  {
+    id: "manama-bike-fest-2026",
+    scope: "international",
+    year: "2026",
+    image:
+      "https://images.unsplash.com/photo-1783668992941-a52bb1f59c42?auto=format&fit=crop&w=1400&q=80",
+    href: "/about",
+  },
 ] satisfies {
   id: keyof Dictionary["participations"]["events"]
+  scope: Exclude<ParticipationScope, "all">
   year: string
   image: string
   href: string
@@ -180,6 +222,8 @@ export const SITE = {
   short: "STRYKER",
   email: "info@stryker-customs.com",
   url: "https://stryker-customs.com",
+  /** سنة التأسيس — تغذّي `foundingDate` في البيانات المهيكلة. */
+  founded: "2025",
   socials: [
     { label: "Instagram", handle: "@stryker.show", href: "https://instagram.com" },
     { label: "X", handle: "@stryker_show", href: "https://x.com" },
