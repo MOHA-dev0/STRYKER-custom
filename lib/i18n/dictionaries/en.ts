@@ -343,12 +343,11 @@ export const en: Dictionary = {
 
   participations: {
     eyebrow: "ENTRIES & EVENTS",
-    titleLead: "The record of attendance ",
+    titleLead: "The record — attendance ",
     titleAccent: "and entries",
-    lead: "A record of the milestones and expos the STRYKER platform and its bikes have taken part in.",
-    detailsCta: "See the details",
+    lead: "A photographic record of the stops the STRYKER bike and its team made through the 2026 season, inside the Kingdom and beyond.",
     moreCta: "Explore more",
-    /** Venue filter — separates what happened inside the Kingdom from what happened abroad. */
+    /** Venue filter — separates what happened inside the Kingdom from abroad. */
     filters: {
       label: "Filter by where the event was held",
       all: "All",
@@ -356,60 +355,84 @@ export const en: Dictionary = {
       international: "Outside Saudi Arabia",
     },
     empty: "No entries are on record in this scope yet.",
-    truncated: "These are the latest {shown} of {total} entries in the record.",
+    truncated: "These are the {shown} headline entries of {total} on record.",
+    /** Gallery controls. {n} = item number, {total} = items in the event. */
+    gallery: {
+      label: "Event photo gallery",
+      prev: "Previous",
+      next: "Next",
+      goTo: "Show item {n} of {total}",
+      counter: "{n}/{total}",
+      audioFallback: "Your browser does not support audio playback.",
+    },
     events: {
-      "riyadh-custom-expo-2025": {
-        title: "Riyadh Custom Bike Expo",
-        location: "Riyadh — Kingdom of Saudi Arabia",
+      "qatar-custom-show-2026": {
+        title: "Qatar Custom Show — 13th edition",
+        location: "Doha — State of Qatar",
         badge: "First place 🏆",
         description:
-          "The first official outing for the STRYKER bike in front of a specialist jury. It left the workshop after fourteen build stages and came back with first place in the custom cruiser class — with the jury singling out the clean frame and the wiring in particular.",
+          "Over five days (13–17 January 2026) the Qatar Custom Show turned the Qatar Racing Club into a floor for modified vehicles, under an entry bar that lets nothing through unless it reflects its owner's creativity “from the wheels to the body, engine and materials”. The STRYKER bike came out of this edition in first place, and the Madinah United Bikers flag went up on the podium in front of entrants from inside Qatar and beyond.",
+        photos: [
+          "The Madinah United Bikers team raising its flag on the Qatar Custom Show floor, the first-place trophy in front of them",
+          "The winners being honoured on the Qatar Custom Show stage at the Qatar Racing Club in Doha",
+        ],
       },
-      "jeddah-motor-show-2025": {
-        title: "Jeddah Motor Show — custom corner",
-        location: "Jeddah — Kingdom of Saudi Arabia",
-        badge: "Official entry 🏁",
-        description:
-          "A stand of our own inside the custom bike corner, with a live demonstration of the paint and airbrush stages in front of visitors. It was the first time the project's full development line was shown end to end: from the first sketch to painted metal.",
-      },
-      "eastern-riders-meet-2025": {
-        title: "Eastern Province riders' meet",
-        location: "Dammam — Kingdom of Saudi Arabia",
-        badge: "Best design 🎨",
-        description:
-          "A field meet that drew workshops from Dammam, Khobar and Jubail. The bike took the best design award for its CNC detailing and hand-built exhaust, and it opened our first partnership line with the workshops of the Eastern Province.",
-      },
-      "riyadh-season-motors-2026": {
-        title: "Riyadh Season — motors zone",
-        location: "Riyadh — Kingdom of Saudi Arabia",
-        badge: "Guest of honour ⭐",
-        description:
-          "An invitation to take part in the motors zone as a local custom bike platform. Three bikes from the STRYKER community were shown alongside a stand introducing the platform and the judging standards we work to.",
-      },
-      "stryker-showcase-2026": {
-        title: "STRYKER SHOWCASE — first edition",
-        location: "Riyadh — Kingdom of Saudi Arabia",
-        badge: "Main event 🔥",
-        description:
-          "The first edition of the show the platform runs itself: builders, workshops and airbrush artists under one roof, with a jury whose standards are published and a clear stage schedule for every entry.",
-      },
-      "dubai-custom-riders-2026": {
-        title: "Dubai custom riders' meet",
+      "dubai-car-bike-week-2026": {
+        title: "Middle East Car & Bike Week — 2026 edition",
         location: "Dubai — United Arab Emirates",
         badge: "International entry 🌍",
         description:
-          "The platform's first outing beyond the Kingdom: a Saudi stand inside a regional meet that gathers the workshops of the Gulf, and a presentation of the judging standards we work to in front of organisers from outside Saudi Arabia.",
+          "On 10 and 11 January 2026 Dubai Studio City hosted the first Middle East Car & Bike Week as part of the Dubai Shopping Festival Auto Season: over a hundred custom cars and bikes across ten arenas on a 400,000 sq ft site, drawing close to twelve thousand visitors. The STRYKER bike was shown in its candy-red paint and arabic scrollwork, with a helmet painted to match, under the 2026 edition banner.",
+        photos: [
+          "The STRYKER bike in its candy-red paint with the matching helmet on the Dubai show floor",
+          "Riders and entrants from regional teams on the Middle East Car & Bike Week ground",
+        ],
       },
-      "manama-bike-fest-2026": {
-        title: "Manama Bike Festival",
-        location: "Manama — Kingdom of Bahrain",
-        badge: "Regional guest ⭐",
+      "alahsa-custom-show-2026": {
+        title: "Al-Ahsa Custom Show 2026",
+        location: "Al-Ahsa — Kingdom of Saudi Arabia",
+        badge: "First place 🏆",
         description:
-          "An invitation to enter the Gulf class with two bikes from the STRYKER community, and the start of an exchange of entries with show organisers in Bahrain and the Eastern Province.",
+          "A Saudi stop where the Madinah United Bikers team took the podium in first place, carrying the flag that bears the Saudi Automobile and Motorcycle Federation crest. The open-air evening drew custom workshops and enthusiasts from Al-Ahsa and the Eastern Province around the vehicle displays and the awards stage.",
+        photos: [
+          "Team members on the Al-Ahsa Custom Show awards stage holding the Madinah United Bikers flag",
+          "A close frame of the first-place announcement in Al-Ahsa",
+        ],
+      },
+      "madinah-custom-show-2026": {
+        title: "Madinah Custom Show 2026",
+        location: "Madinah — Kingdom of Saudi Arabia",
+        badge: "First place 🏆",
+        description:
+          "In Madinah the bike stood among rows of classic cars with the city's hills behind it, and came out of judging in first place. On the night round the season's haul was lined up in front of it — Best of Paint, First Place and the Car & Bike plaque — on the same display mat that has travelled with the project to every stop.",
+        photos: [
+          "The bike on display among classic cars in Madinah at sunset",
+          "The bike on the night round with the Best of Paint and First Place trophies in front of it",
+        ],
+      },
+      "alkharj-custom-show-2026": {
+        title: "Al Kharj Custom Show 2026",
+        location: "Al Kharj — Kingdom of Saudi Arabia",
+        badge: "First place 🏆",
+        description:
+          "First place at the Al Kharj edition of the Custom Show. The trophy was handed over on stage at the close of an evening that gathered riding clubs from Riyadh, Al Kharj and the neighbouring governorates — carved as a red cruiser and inscribed with the name of Al Kharj United Bikers, the team behind the event.",
+        photos: [
+          "The first-place trophy handed over on the Al Kharj Custom Show 2026 stage",
+        ],
+      },
+      "iu-cultures-festival-2026": {
+        title: "Festival of Cultures and Peoples — Islamic University",
+        location: "Madinah — Kingdom of Saudi Arabia",
+        badge: "Cultural entry 🎓",
+        description:
+          "An appearance outside competition: the bike joined the fourteenth Festival of Cultures and Peoples, run by the Islamic University of Madinah over ten days across March and April 2026 under the patronage of the Emir of the Madinah Region, with more than ninety countries and over four hundred activities taking part. It stood at the festival entrance as a piece of Saudi craft among pavilions introducing the cultures of the world.",
+        photos: [
+          "The bike at the entrance of the Festival of Cultures and Peoples at the Islamic University of Madinah",
+          "The team's rider on the bike amid the festival grounds at night",
+        ],
       },
     },
   },
-
   about: {
     hero: {
       eyebrow: "ABOUT STRYKER",

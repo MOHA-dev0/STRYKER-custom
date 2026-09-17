@@ -5,6 +5,24 @@
  * النصوص المترجمة كلها في `lib/i18n/dictionaries/*` وتُربط بهذه العناصر عبر الـ id.
  */
 
+import type { StaticImageData } from "next/image"
+
+/*
+ * صور المشاركات. أسماء الملفات في `public/photo` كما وصلت من أرض الفعاليات،
+ * والأسماء هنا مكتوبة بالكامل حتى يقرأ الجدول أدناه نفسه.
+ */
+import qatar from "@/public/photo/qatar.jpeg"
+import qatar2 from "@/public/photo/qatar2.jpeg"
+import dubai from "@/public/photo/dubi.jpeg"
+import dubai2 from "@/public/photo/dubi2.jpeg"
+import alahsa from "@/public/photo/alihsa.jpeg"
+import alahsa2 from "@/public/photo/alihsa2.jpeg"
+import madinah from "@/public/photo/almadinh.jpeg"
+import madinah2 from "@/public/photo/almadinh2.jpeg"
+import alkharj from "@/public/photo/alkharg.jpeg"
+import universityEntrance from "@/public/photo/uni2.jpeg"
+import universityGrounds from "@/public/photo/uni.jpeg"
+
 import type { Dictionary } from "@/lib/i18n/dictionaries/ar"
 
 /**
@@ -122,75 +140,85 @@ export const PARTICIPATION_SCOPES = ["all", "local", "international"] as const
 export type ParticipationScope = (typeof PARTICIPATION_SCOPES)[number]
 
 /**
- * سجل المشاركات — المعرّف والسنة والنطاق والصورة والوجهة فقط.
- * العنوان والمكان والوسام والوصف مترجمة في `participations.events` بالقاموسين.
+ * وسيط واحد داخل معرض الفعالية.
  *
- * مرتّبة زمنياً من الأقدم إلى الأحدث؛ أضف أي فعالية جديدة في نهاية المصفوفة.
- * الصور مؤقتة — أي مصدر خارجي جديد يحتاج إدخال نطاقه في
- * `images.remotePatterns` داخل `next.config.ts`.
+ * الاتحاد مميَّز بـ `kind` لا مصفوفة صور عارية: المعرض اليوم كله صور، وإضافة
+ * مقطع صوتي لاحقاً (تسجيل من أرض الفعالية، أو تعليق صوتي على الشريحة) لا تحتاج
+ * أكثر من عنصر `audio` جديد في `media` — المعرض يفرّع على `kind` عند العرض،
+ * فلا يتغيّر شكل البيانات ولا واجهة المكوّن.
+ *
+ * الصور مستورَدة استيراداً ساكناً لا كمسارات نصية: يأتي معها المقاس الحقيقي
+ * (فيحجز المتصفح مكانها بلا قفزة تخطيط) و`blurDataURL` تُعرض ريثما تصل.
+ */
+export type EventMedia =
+  | { kind: "image"; src: StaticImageData }
+  | { kind: "audio"; src: string; poster: StaticImageData }
+
+/** اختصار يبقي جدول المشاركات أدناه مقروءاً. */
+const image = (src: StaticImageData): EventMedia => ({ kind: "image", src })
+
+/**
+ * سجل المشاركات — المعرّف والنطاق والسنة والتاريخ ووسائط المعرض.
+ * العنوان والمكان والوسام والوصف وتعليقات الصور مترجمة في
+ * `participations.events` بالقاموسين.
+ *
+ * مرتّبة بترتيب العرض لا زمنياً: الفعاليات الأبرز أولاً، لأن الرئيسية تقصّ
+ * القائمة على أول ثلاث. أي فعالية جديدة تُوضع في موضعها من هذا الترتيب.
+ *
+ * `media` هنا موازٍ لـ `photos` في القاموسين عنصراً بعنصر: الوسيط رقم n يأخذ
+ * تعليق رقم n. أضف صورة هنا وتعليقها في `ar.ts` و`en.ts` معاً.
+ *
+ * `date` بصيغة ISO للبيانات المهيكلة وحدها، و`year` هو ما يُطبع على اللوحة.
  */
 export const PARTICIPATIONS = [
   {
-    id: "riyadh-custom-expo-2025",
-    scope: "local",
-    year: "2025",
-    image: "/backgorund.webp",
-    href: "/about",
-  },
-  {
-    id: "jeddah-motor-show-2025",
-    scope: "local",
-    year: "2025",
-    image:
-      "https://images.unsplash.com/photo-1546801375-cb25ea841643?auto=format&fit=crop&w=1400&q=80",
-    href: "/about",
-  },
-  {
-    id: "eastern-riders-meet-2025",
-    scope: "local",
-    year: "2025",
-    image:
-      "https://images.unsplash.com/photo-1783668992941-a52bb1f59c42?auto=format&fit=crop&w=1400&q=80",
-    href: "/about",
-  },
-  {
-    id: "riyadh-season-motors-2026",
-    scope: "local",
-    year: "2026",
-    image:
-      "https://images.unsplash.com/photo-1780853740000-441ba8208ed5?auto=format&fit=crop&w=1400&q=80",
-    href: "/about",
-  },
-  {
-    id: "stryker-showcase-2026",
-    scope: "local",
-    year: "2026",
-    image:
-      "https://images.unsplash.com/photo-1785100292412-97886edb1978?auto=format&fit=crop&w=1400&q=80",
-    href: "/about",
-  },
-  {
-    id: "dubai-custom-riders-2026",
+    id: "qatar-custom-show-2026",
     scope: "international",
     year: "2026",
-    image:
-      "https://images.unsplash.com/photo-1546801375-cb25ea841643?auto=format&fit=crop&w=1400&q=80",
-    href: "/about",
+    date: "2026-01-13",
+    media: [image(qatar2), image(qatar)],
   },
   {
-    id: "manama-bike-fest-2026",
+    id: "dubai-car-bike-week-2026",
     scope: "international",
     year: "2026",
-    image:
-      "https://images.unsplash.com/photo-1783668992941-a52bb1f59c42?auto=format&fit=crop&w=1400&q=80",
-    href: "/about",
+    date: "2026-01-10",
+    media: [image(dubai), image(dubai2)],
+  },
+  {
+    id: "alahsa-custom-show-2026",
+    scope: "local",
+    year: "2026",
+    date: "2026",
+    media: [image(alahsa), image(alahsa2)],
+  },
+  {
+    id: "madinah-custom-show-2026",
+    scope: "local",
+    year: "2026",
+    date: "2026",
+    media: [image(madinah2), image(madinah)],
+  },
+  {
+    id: "alkharj-custom-show-2026",
+    scope: "local",
+    year: "2026",
+    date: "2026",
+    media: [image(alkharj)],
+  },
+  {
+    id: "iu-cultures-festival-2026",
+    scope: "local",
+    year: "2026",
+    date: "2026-03-29",
+    media: [image(universityEntrance), image(universityGrounds)],
   },
 ] satisfies {
   id: keyof Dictionary["participations"]["events"]
   scope: Exclude<ParticipationScope, "all">
   year: string
-  image: string
-  href: string
+  date: string
+  media: EventMedia[]
 }[]
 
 export const JOURNEY_IMAGE =

@@ -99,7 +99,7 @@ export function homeJsonLd(locale: Locale, dict: Dictionary) {
       {
         "@type": "ItemList",
         name: dict.meta.submissions.title,
-        itemListElement: [...PARTICIPATIONS].reverse().map((event, i) => ({
+        itemListElement: PARTICIPATIONS.map((event, i) => ({
           "@type": "ListItem",
           position: i + 1,
           item: eventNode(locale, dict, event),
@@ -115,16 +115,20 @@ function eventNode(
   event: (typeof PARTICIPATIONS)[number]
 ) {
   const text = dict.participations.events[event.id]
+  const cover = event.media.find((item) => item.kind === "image")
   return {
     "@type": "Event",
     name: text.title,
     description: text.description,
-    // السجل يحمل السنة وحدها؛ `startDate` بدقة السنة صيغة صحيحة في ISO 8601.
-    startDate: event.year,
+    // `date` تاريخ ISO حيث عُرف اليوم، وسنة مجرّدة حيث لم يُعرف — وكلاهما
+    // صيغة صحيحة في ISO 8601، فالدقة الناقصة أصدق من يوم مُختلَق.
+    startDate: event.date,
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    image: event.image,
-    url: absoluteUrl(localeHref(locale, event.href)),
+    // أول صورة في المعرض هي غلاف الفعالية.
+    image: cover && absoluteUrl(cover.src.src),
+    // لا صفحة لكل فعالية بعد؛ السجل كله يعيش في صفحة المشاركات.
+    url: absoluteUrl(localeHref(locale, "/submissions")),
     location: {
       "@type": "Place",
       name: text.location,
@@ -144,9 +148,7 @@ export function submissionsJsonLd(locale: Locale, dict: Dictionary) {
     "@context": "https://schema.org",
     "@graph": [
       breadcrumb(locale, dict, "/submissions", dict.meta.submissions.title),
-      ...[...PARTICIPATIONS]
-        .reverse()
-        .map((event) => eventNode(locale, dict, event)),
+      ...PARTICIPATIONS.map((event) => eventNode(locale, dict, event)),
     ],
   }
 }
