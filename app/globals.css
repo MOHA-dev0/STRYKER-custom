@@ -203,14 +203,23 @@
 
   /* --- Texture ---------------------------------------------------------- */
 
-  /* Barely-there paper tooth. Sits above backgrounds, below content. */
+  /*
+   * Barely-there paper tooth. Sits above backgrounds, below content.
+   *
+   * No `mix-blend-mode` any more. Every site this class lands on is full-area
+   * and one of them is the viewport-fixed backdrop, so the blend was a
+   * full-screen composite pass charged on every frame that anything underneath
+   * moved — which, with the emblem drifting, is every scroll frame. The theme
+   * is light paper throughout, and multiplying a noise field against a surface
+   * that is already ~0.96 luminance lands within a shade of compositing it
+   * normally, so nothing here is traded for the pass.
+   */
   .grain::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.14;
-    mix-blend-mode: multiply;
+    opacity: 0.12;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.26'/%3E%3C/svg%3E");
   }
 
@@ -408,6 +417,25 @@
     }
   }
 
+  /*
+   * Static decoration on the viewport-fixed backdrop — the two warm washes,
+   * the dot field, the paper tooth. None of them ever change, but without a
+   * layer of their own they are rastered together with the emblem that drifts
+   * above them, so a full-screen noise field and a full-screen dot grid were
+   * being repainted on every scroll frame to show a watermark moving by a few
+   * percent. A layer each turns that back into what it should have been: paint
+   * once, composite thereafter.
+   *
+   * `translateZ(0)` and not `will-change: transform` on purpose — these layers
+   * hold still, and a standing hint on a full-screen surface is texture memory
+   * rented against an animation that never comes.
+   */
+  .backdrop-layer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
   /* --- Scroll reveal ----------------------------------------------------- */
 
   /*
@@ -592,10 +620,12 @@
   }
 
   /*
-   * The hero's own paper tooth. Same texture as `.grain`, but the multiply
-   * blend — a full-screen composite pass on every frame, over layers that move
-   * for as long as the hero is on screen — is only spent where there is GPU to
-   * spare. Phones get the same tooth composited normally instead.
+   * The hero's own paper tooth. Same texture as `.grain`, and composited
+   * normally for the same reason — only more so: this one sits over the stage
+   * photos, which are being scaled and cross-faded for as long as the hero is
+   * on screen, so a blend here was a full-screen pass on literally every frame
+   * of the scene. Desktop still gets a denser tooth than a phone, just without
+   * the pass.
    */
   .grain-stage::after {
     content: "";
@@ -607,8 +637,7 @@
   }
   @media (min-width: 768px) {
     .grain-stage::after {
-      opacity: 0.14;
-      mix-blend-mode: multiply;
+      opacity: 0.11;
     }
   }
 

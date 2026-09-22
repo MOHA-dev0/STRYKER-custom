@@ -257,11 +257,16 @@ function StageCopyBlock({
       )}
     >
       {/*
-        `backdrop-blur` فوق sm فقط: الشارة تسبح فوق طبقات تتحرك طوال بقاء الـ
-        Hero على الشاشة، وطمس ما تحتها يعيد رسمه مع كل إطار. على الهاتف يحلّ
-        ورقٌ شبه معتم محلّه — نفس القراءة بلا تلك الكلفة.
+        ورقٌ شبه معتم في المقاسين، بلا `backdrop-blur` في أيّهما.
+
+        كان الطمس الخلفي محصوراً فوق `sm` على أساس أن سطح المكتب يحتمله. لكنه
+        هنا أسوأ منه في أي مكان آخر: الشارة عضو في ورقة المرحلة، وهذه الورقة
+        تُحرَّك شفافيةً وإزاحةً مع كل إطار ما دام الـ Hero على الشاشة، وتحتها
+        صورة ممتدّة تتقارب في الوقت نفسه. فالطمس الخلفي هنا قراءةٌ لخلفية
+        متغيّرة تحت عنصر متحرّك — أي إعادة رسم مضمونة في كل إطار، لا مرة واحدة
+        تُخزَّن. وما كان يُرى من ورائه أصلاً لا يستحق ذلك.
       */}
-      <div className="mb-4 inline-flex items-center gap-2.5 rounded-full border border-line bg-paper/85 py-1.5 pe-3.5 ps-1.5 sm:mb-5 sm:gap-3 sm:bg-paper/70 sm:pe-4 sm:backdrop-blur-sm">
+      <div className="mb-4 inline-flex items-center gap-2.5 rounded-full border border-line bg-paper/85 py-1.5 pe-3.5 ps-1.5 sm:mb-5 sm:gap-3 sm:pe-4">
         <span className="grid size-7 place-items-center rounded-full bg-pine font-plate text-[11px] font-black text-paper">
           {String(index + 1).padStart(2, "0")}
         </span>

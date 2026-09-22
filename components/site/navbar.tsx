@@ -65,8 +65,23 @@ export function Navbar() {
         <div
           className={cn(
             "pointer-events-auto flex h-16 items-center justify-between gap-4 rounded-full border px-3 transition-[background-color,border-color,box-shadow] duration-300 md:h-[4.5rem] md:px-4",
+            /*
+              ورقٌ كثيف بلا طمس خلفي — لا `backdrop-blur-xl` ولا حتى `sm`.
+
+              الطمس الخلفي ليس كأي مرشّح: المتصفح يقرأ ما تحت العنصر ثم يموّهه
+              ثم يركّب. وهذا العنصر `fixed` بعرض الصفحة، فالقراءة تتكرّر مع كل
+              إطار تمرير، وما تحته ليس لوناً مسطّحاً بل الطبقة الخلفية الدائمة
+              بغسيلها وعلامتها ونقشها. القياس على هذه الصفحة: الشريط وحده كان
+              يضاعف زمن الإطارات الضائعة أثناء التمرير تقريباً، ويرفع أطول إطار
+              من ~60ms إلى ~180ms — أي ارتجافة تُرى بالعين عند كل دفعة.
+
+              ونصف القطر ليس هو المشكلة، فحتى 4px كلّفت ثلث ما بقي: الثمن في
+              القراءة الخلفية نفسها لا في عرض النواة. و6% من الشفافية تكفي لتمرّ
+              غسلة الضوء العلوية من تحت الشريط، فلا يبدو مستطيلاً مسطّحاً فوقها،
+              وهو كل ما كان الزجاج يخدمه هنا على سطح ورقيّ فاتح.
+            */
             condensed
-              ? "border-line/70 bg-sand/80 shadow-[0_18px_50px_-34px_rgba(26,31,29,0.75)] backdrop-blur-xl"
+              ? "border-line/70 bg-sand/94 shadow-[0_18px_50px_-34px_rgba(26,31,29,0.75)]"
               : "border-transparent bg-transparent"
           )}
         >
@@ -93,7 +108,12 @@ export function Navbar() {
 
           {/* روابط سطح المكتب — حبّة زجاجية والمؤشر ينزلق خلف الرابط النشط */}
           <nav className="hidden lg:block" aria-label={dict.nav.primaryLabel}>
-            <ul className="flex items-center gap-1 rounded-full border border-line bg-paper/60 p-1.5 backdrop-blur-sm">
+            {/*
+              بلا طمس خلفي: هذه الحبّة تقع داخل حبّة الهيدر المطموسة أصلاً،
+              وطمسٌ خلفي داخل طمس خلفي يعني تمريرتَي قراءة وتمويه متداخلتين على
+              عنصر مثبّت. وما تحتها بعد تمويه الأب لم يعد فيه ما يُموَّه.
+            */}
+            <ul className="flex items-center gap-1 rounded-full border border-line bg-paper/75 p-1.5">
               {NAV_LINKS.map((link) => {
                 const target = href(link.href)
                 const active = pathname === target

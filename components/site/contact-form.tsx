@@ -6,7 +6,9 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { AnimatePresence, motion } from "framer-motion"
-import { CheckCircle2, Loader2, Send } from "lucide-react"
+import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react"
+
+import { sendContactMessage } from "@/app/actions/contact"
 
 import { CONTACT_SUBJECTS } from "@/lib/data"
 import { useI18n } from "@/lib/i18n/context"
@@ -32,6 +34,8 @@ import {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
+type Subject = (typeof CONTACT_SUBJECTS)[number]
+
 const VALID = new Set<string>(CONTACT_SUBJECTS)
 
 /** الرسائل تأتي من القاموس، فالمخطط يُبنى لكل لغة. */
@@ -53,11 +57,12 @@ function buildSchema(t: Dictionary["contact"]["form"]["errors"]) {
 type Values = z.infer<ReturnType<typeof buildSchema>>
 
 export function ContactForm() {
-  const { dict } = useI18n()
+  const { dict, locale } = useI18n()
   const copy = dict.contact.form
   const params = useSearchParams()
   const preset = params.get("subject")
   const [sent, setSent] = React.useState(false)
+  const [error, setError] = React.useState<string | null>(null)
 
   const schema = React.useMemo(() => buildSchema(copy.errors), [copy.errors])
 
@@ -72,9 +77,21 @@ export function ContactForm() {
   })
 
   async function onSubmit(values: Values) {
-    // لا يوجد Backend بعد — نحاكي الإرسال حتى تُربط المنصة ببريد الفريق.
-    await new Promise((r) => setTimeout(r, 900))
-    console.info("STRYKER contact:", values)
+    setError(null)
+
+    const result = await sendContactMessage({
+      ...values,
+      /* القائمة لا تعرض إلا مفاتيح CONTACT_SUBJECTS، والخادم يتحقق منها ثانية. */
+      subject: values.subject as Subject,
+      locale,
+    })
+
+    if (!result.ok) {
+      /* "invalid" لا يُفترض أن يصل إلى هنا — مخطّط الخادم نسخة من مخطّط النموذج. */
+      setError(result.reason === "rateLimited" ? copy.rateError : copy.sendError)
+      return
+    }
+
     setSent(true)
     form.reset({ name: "", email: "", subject: "", message: "" })
   }
@@ -103,7 +120,14 @@ export function ContactForm() {
             </span>
             <h3 className="font-display text-xl font-bold text-ink">{copy.doneTitle}</h3>
             <p className="max-w-sm text-sm leading-loose text-ink-soft">{copy.doneBody}</p>
-            <Button variant="outline" size="sm" onClick={() => setSent(false)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setError(null)
+                setSent(false)
+              }}
+            >
               {copy.doneCta}
             </Button>
           </motion.div>
@@ -216,6 +240,16 @@ export function ContactForm() {
                   </Button>
                   <p className="text-xs text-ink-mute">{copy.replyNote}</p>
                 </div>
+
+                {error ? (
+                  <p
+                    role="alert"
+                    className="flex items-start gap-2 rounded-xl border border-ember/30 bg-ember/5 px-4 py-3 text-xs leading-relaxed text-ember-deep"
+                  >
+                    <AlertCircle className="mt-px size-4 shrink-0" />
+                    {error}
+                  </p>
+                ) : null}
               </form>
             </Form>
           </motion.div>

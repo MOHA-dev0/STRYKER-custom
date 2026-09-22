@@ -109,13 +109,21 @@ function DriftingEmblem() {
   })
 
   const y = useTransform(p, [0, 1], ["-2.5%", "2.5%"])
-  const scale = useTransform(p, [0, 1], [1, 1.08])
   // الكثافة تهبط من 14% إلى ~10% فقط؛ لا تصل الصفر في أي نقطة من الصفحة.
   const opacity = useTransform(p, [0, 1], [1, 0.72])
 
+  /*
+   * انزياح وشفافية فقط — لا تكبير.
+   *
+   * العلامة ليست صورة مسطّحة: هي تدرّج ذهبي مقنّع بـ `mask-image`. وتكبير طبقة
+   * مقنّعة يعني إعادة رسمها بمقاسها الجديد لا تركيبها فحسب، فيتحوّل ما ظنناه
+   * حركة مجانية على المُركِّب إلى إعادة رسم بملء النافذة مع كل إطار تمرير.
+   * الانزياح والشفافية يبقيان على مسار التركيب وحده، والفرق بين 1 و1.08 على
+   * طول الصفحة كلها ليس مما يُرى خلف نص وأقسام.
+   */
   return (
     <motion.div
-      style={{ y, scale, opacity }}
+      style={{ y, opacity }}
       className="gpu absolute inset-0 grid place-items-center"
     >
       <EmblemArt />
@@ -132,7 +140,7 @@ export function BrandBackdrop() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
     >
-      <div className="brand-wash absolute inset-0" />
+      <div className="brand-wash backdrop-layer absolute inset-0" />
 
       {desktop && !still ? (
         <DriftingEmblem />
@@ -142,8 +150,8 @@ export function BrandBackdrop() {
         </div>
       )}
 
-      <div className="dot-grid absolute inset-0 opacity-[0.12] md:opacity-[0.22]" />
-      <div className="grain absolute inset-0" />
+      <div className="dot-grid backdrop-layer absolute inset-0 opacity-[0.12] md:opacity-[0.22]" />
+      <div className="grain backdrop-layer absolute inset-0" />
     </div>
   )
 }

@@ -25,8 +25,13 @@ const buttonVariants = cva(
           "bg-pine text-paper shadow-soft hover:-translate-y-0.5 hover:bg-pine-deep hover:shadow-lift",
         ember:
           "bg-ember text-paper shadow-soft hover:-translate-y-0.5 hover:bg-ember-deep hover:shadow-lift",
+        /*
+          بلا `backdrop-blur`: هذا النوع يُستعمل داخل الهيدر المثبّت وفوق الـ
+          Hero المتحرك، فكان كل زرّ منه منطقةَ قراءة وتمويه خلفي تُعاد مع كل
+          إطار تمرير. ورقٌ بكثافة 80% يقرأ كما كان فوق سطح ورقيّ فاتح.
+        */
         outline:
-          "border border-line bg-paper/60 text-ink backdrop-blur-sm hover:-translate-y-0.5 hover:border-pine/35 hover:bg-pine-soft hover:text-pine-deep",
+          "border border-line bg-paper/80 text-ink hover:-translate-y-0.5 hover:border-pine/35 hover:bg-pine-soft hover:text-pine-deep",
         ghost: "text-ink-soft hover:bg-pine-soft hover:text-pine-deep",
         link: "rounded-none px-0 text-pine-deep underline-offset-[6px] hover:underline",
       },

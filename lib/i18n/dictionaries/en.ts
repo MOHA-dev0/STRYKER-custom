@@ -644,6 +644,8 @@ export const en: Dictionary = {
       doneBody:
         "The organising team will be in touch when entries open. Start gathering your project photos and build stages now.",
       doneCta: "Register another entry",
+      sendError: "We could not send your entry right now. Try again shortly, or email us directly at info@stryker-customs.com.",
+      rateError: "You have sent several entries in a short time. Wait a few minutes and try again.",
       errors: {
         name: "Enter your full name or the name you are known by.",
         contactRequired: "Enter a phone number or an email address.",
@@ -700,6 +702,8 @@ export const en: Dictionary = {
       doneBody:
         "We usually reply within one to three working days. Thank you for reaching out to the STRYKER team.",
       doneCta: "Send another message",
+      sendError: "We could not send your message right now. Try again shortly, or email us directly at info@stryker-customs.com.",
+      rateError: "You have sent several messages in a short time. Wait a few minutes and try again.",
       errors: {
         name: "Enter your full name.",
         emailRequired: "An email address is required.",
