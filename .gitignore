@@ -41,4 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 # البريد المُرسَل في .env.local وحده؛ المثال يُرفع للمرجعية.
-!.env.example
+.env.example
+.env.local
