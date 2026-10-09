@@ -174,6 +174,13 @@ const image = (src: StaticImageData): EventMedia => ({ kind: "image", src })
  */
 export const PARTICIPATIONS = [
   {
+    id: "saudi-national-day-2026",
+    scope: "local",
+    year: "2026",
+    date: "2026-09-23",
+    media: [image(nationalDay2), image(nationalDay)],
+  },
+  {
     id: "qatar-custom-show-2026",
     scope: "international",
     year: "2026",
@@ -214,13 +221,6 @@ export const PARTICIPATIONS = [
     year: "2026",
     date: "2026-03-29",
     media: [image(universityEntrance), image(universityGrounds)],
-  },
-  {
-    id: "saudi-national-day-2026",
-    scope: "local",
-    year: "2026",
-    date: "2026-09-23",
-    media: [image(nationalDay2), image(nationalDay)],
   },
 ] satisfies {
   id: keyof Dictionary["participations"]["events"]
