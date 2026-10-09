@@ -431,6 +431,17 @@ export const en: Dictionary = {
           "The team's rider on the bike amid the festival grounds at night",
         ],
       },
+      "saudi-national-day-2026": {
+        title: "96th Saudi National Day Celebrations — Lulu Dammam Mall",
+        location: "Dammam — Kingdom of Saudi Arabia",
+        badge: "National Day 🇸🇦",
+        description:
+          "In celebration of the 96th Saudi National Day, the STRYKER team participated in the festivities hosted at Lulu Dammam Mall in Dammam. The custom STRYKER bike was displayed in the main mall atrium, showcasing Saudi custom craftsmanship and motorcycle artistry amidst festive celebrations and enthusiastic public engagement. The team took to the stage proudly presenting the official STRYKER Custom Bike Show Team banner, endorsed by the Ministry of Sport emblem and the Bikers Network.",
+        photos: [
+          "The custom STRYKER bike showcased in the Lulu Dammam Mall atrium amid vibrant National Day celebrations",
+          "The STRYKER team on the National Day stage presenting the official team banner endorsed by the Ministry of Sport",
+        ],
+      },
     },
   },
   about: {

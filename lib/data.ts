@@ -22,6 +22,8 @@ import madinah2 from "@/public/photo/almadinh2.jpeg"
 import alkharj from "@/public/photo/alkharg.jpeg"
 import universityEntrance from "@/public/photo/uni2.jpeg"
 import universityGrounds from "@/public/photo/uni.jpeg"
+import nationalDay from "@/public/photo/ksa.jpeg"
+import nationalDay2 from "@/public/photo/ksa2.jpeg"
 
 import type { Dictionary } from "@/lib/i18n/dictionaries/ar"
 
@@ -212,6 +214,13 @@ export const PARTICIPATIONS = [
     year: "2026",
     date: "2026-03-29",
     media: [image(universityEntrance), image(universityGrounds)],
+  },
+  {
+    id: "saudi-national-day-2026",
+    scope: "local",
+    year: "2026",
+    date: "2026-09-23",
+    media: [image(nationalDay2), image(nationalDay)],
   },
 ] satisfies {
   id: keyof Dictionary["participations"]["events"]
